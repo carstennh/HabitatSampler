@@ -1,0 +1,50 @@
+#R Environment for a running version on x86_64-suse-linux-gnu (64-bit)
+
+R version 3.4.2 
+attached base packages:
+stats
+graphics
+grDevices utils
+datasets
+methods
+base  
+
+other attached packages:
+htmlwidgets_1.2
+leafem_0.0.1
+leaflet_2.0.1      
+rgeos_0.3-26
+velox_0.2.0
+e1071_1.6-8        
+randomForest_4.6-14
+spatialEco_1.1-0
+maptools_0.9-2     
+raster_2.6-7
+rgdal_1.2-20
+sp_1.2-7   
+
+loaded via a namespace (and not attached):
+Rcpp_1.0.0
+magrittr_1.5
+units_0.6-2
+xtable_1.8-2    
+lattice_0.20-35
+R6_2.2.2
+tools_3.4.2
+grid_3.4.2      
+DBI_1.0.0
+htmltools_0.3.6
+crosstalk_1.0.0
+class_7.3-14    
+digest_0.6.15
+sf_0.6-3
+shiny_1.1.0
+later_0.7.3     
+promises_1.0.1
+codetools_0.2-15
+mime_0.5
+compiler_3.4.2  
+classInt_0.1-24
+httpuv_1.4.5
+foreign_0.8-70  
+
