@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<GroundOverlay>
+<name>layer</name>
+<Icon><href>step_01.png</href><viewBoundScale>0.75</viewBoundScale></Icon>
+	<LatLonBox>
+		<north>53.0575767378268</north><south>53.0451084378268</south><east>12.6993218786229</east><west>12.6729488786229</west>
+	</LatLonBox>
+</GroundOverlay></kml>
