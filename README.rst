@@ -1,5 +1,5 @@
 .. figure:: GitDocs/Logo.png
-    :target: https://gitext.gfz-potsdam.de/carstenn/habitat-sampler/tree/master/HabitatSampler_v2.0
+    :target: https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0
     :align: center
 
 ==================================================================================================
@@ -10,7 +10,7 @@ How to use
 ----------------
 * You need R to run the master script: **HabitatSampler_v02.r**
 * Within the master script a step by step procedure is executed: **HabitatSampler_Usage.txt** 
-* This is the routine: `HabitatSampler_v2.0 <https://gitext.gfz-potsdam.de/carstenn/habitat-sampler/tree/master/HabitatSampler_v2.0>`__
+* This is the routine: `HabitatSampler_v2.0 <https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0>`__
 
 Input
 ----------------
