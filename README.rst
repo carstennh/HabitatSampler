@@ -1,4 +1,4 @@
-.. figure:: GitDocs/Logo.jpg
+.. figure:: GitDocs/Logo.png
     :target: https://gitext.gfz-potsdam.de/carstenn/habitat-sampler/tree/master/HabitatSampler_v2.0
     :align: center
 
@@ -22,7 +22,7 @@ Output
 ----------------
 * **Interactive Maps** of habitat type probailities
 
-.. image:: GitDocs/figure_1.jpg
+.. image:: GitDocs/figure_1.png
            
 * **Classified Image** of chosen categories
 * **Sample Distribution** of sampled categories
@@ -30,7 +30,7 @@ Output
 * the categories are refferred to as habitat types
 
 
-.. image:: GitDocs/figure_2.jpg
+.. image:: GitDocs/figure_2.png
 
 Key Features
 ----------------
