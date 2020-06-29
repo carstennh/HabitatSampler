@@ -31,12 +31,12 @@ usePack<-function(...) {
         lapply(need,require,character.only=TRUE)
     }
     
-install_version("leafem", version = "0.0.1", repos = "https://cran.uni-muenster.de/")  
-require(leafem)
-
 need<-grep(need, pattern="velox")    
 if (length(need)>0) {    
 if(.Platform$OS.type == "windows") { install.Rtools(choose_version = F, check = T) }
 install_version("velox", version = "0.2.0", repos = "https://cran.uni-muenster.de/")
 require(velox)
+
+install_version("leafem", version = "0.0.1", repos = "https://cran.uni-muenster.de/")  
+require(leafem)
 }}
