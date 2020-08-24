@@ -8,9 +8,18 @@ Procedure on Autonomous Sampling and Reductive Learning in Imagery
 
 How to use
 ----------------
+1. Stepwise Procedure
+----------------------------------
 * You need R to run the master script: **HabitatSampler_v02.r**
 * Within the master script a step by step procedure is executed: **HabitatSampler_Usage.txt** 
 * This is the routine: `HabitatSampler_v2.0 <https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0>`__
+
+2. R package
+--------------------
+* You need R to install the **package HaSa** that includes all functions and test data
+* devtools::install_github("carstennh/HaSa")
+* library(HaSa)
+* there are information available about programm execution and function behavior `HabitatSampler_Usage <https://github.com/carstennh/HabitatSampler/tree/master/vignettes>`__
 
 Input
 ----------------
