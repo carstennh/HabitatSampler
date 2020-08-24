@@ -18,8 +18,8 @@ How to use
 --------------------
 * You need R to install the **package HaSa** that includes all functions and test data
 * devtools::install_github("carstennh/HabitatSampler")
-* library(HaSa)
-* there are information available about programm execution and function behavior `HabitatSampler_Usage <https://github.com/carstennh/HabitatSampler/tree/master/vignettes>`__
+* library(HaSa) and list datasets: data(package="HaSa") and functions: lsf.str("package:HaSa") or use library(help="HaSa")
+* there are information available about programm execution and function behavior in Rmarkdown: `HabitatSampler_Usage <https://github.com/carstennh/HabitatSampler/tree/master/vignettes>`__
 
 Input
 ----------------
