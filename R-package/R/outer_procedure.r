@@ -16,7 +16,7 @@
 #' @param init.seed "sample" for new or use run1@seeds to reproduce previous steps
 #' @param outPath output path for saving results
 #' @param step at which step should the procedure start, e.g. use step = 2 if the first habitat is already extracted
-#' @param  classNames vector with class names in the order of reference spectra
+#' @param  classNames character vector with class names in the order of reference spectra
 #' @param n_classes total number of classes (habitat types) to be separated
 #' @param multiTest number of test runs to compare different probability outputs
 #' @param RGB rgb channel numbers for image plot 
@@ -50,7 +50,7 @@
 #' @export
 
 ###################################################################################
-multi_Class_Sampling<-function(in.raster, init.samples=30, sample_type="regular", nb_models=200, nb_it=10, buffer, reference, model="rf", mtry=10, last=F, seed=3, init.seed="sample", outPath, step=1, classNames, n_classes, multiTest=1,RGB=c(1,2,3)) {
+multi_Class_Sampling<-function(in.raster, init.samples=30, sample_type="regular", nb_models=200, nb_it=10, buffer, reference, model="rf", mtry=10, last=F, seed=3, init.seed="sample", outPath, step=1, classNames, n_classes, multiTest=1,RGB=c(19,20,21)) {
 
 ###first steps: data preparation
 if (class(reference) == "SpatialPointsDataFrame") { reference<-as.data.frame(raster::extract(in.raster,reference)) }
