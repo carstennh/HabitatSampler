@@ -5,8 +5,8 @@
 \title{Perform Habitat Sampling and Probability Mapping}
 \usage{
 multi_Class_Sampling(in.raster, init.samples = 30, sample_type = "regular", nb_models = 200, 
-nb_it = 10, buffer, reference, model = "rf", mtry, last = F, seed = 3, init.seed = "sample", 
-outPath, step = 1, classNames, n_classes, multiTest = 1, RGB = c(1, 2, 3) )
+nb_it = 10, buffer, reference, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", 
+outPath, step = 1, classNames, n_classes, multiTest = 1, RGB = c(19, 20, 21) )
 }
 \arguments{
 \item{in.raster}{satellite time series stack (rasterBrickObject) or just any type of image (*rasterObject)}
