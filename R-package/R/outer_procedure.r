@@ -82,7 +82,7 @@ if (step != 1) {if (step<11) {load(paste(outPath,paste("threshold_step_0",step-1
 for ( i in step:r) {print(paste(paste("init.samples = ",init.samples),paste("models = ",nb_models))); if ( i == r) {last=T}
 
 
-if ( multiTest > 1 ) { test<-list(); maFo<-list(); new.names<-list(); decision = "0" 
+if ( multiTest > 1 ) { test<-list(); maFo<-list(); new.names<-list(); new.acc<-list(); decision = "0" 
 ####################################################################################################################
   
   while (decision == "0") {
@@ -90,10 +90,15 @@ if ( multiTest > 1 ) { test<-list(); maFo<-list(); new.names<-list(); decision =
 
   ########################
   maFo_rf<-sample_nb(raster=in.raster,nb_samples=seq(init.samples,init.samples,init.samples),sample_type=sample_type,nb_mean=nb_models,nb_it=nb_it,buffer=buffer,reference=reference,model=model,area=area,mtry=mtry,last=last,seed=seed,init.seed=init.seed)
+  
+  index<- maFo_rf$index
+  acc<- maFo_rf$acc
+  maFo_rf<- maFo_rf$obj
   ########################
   maFo[[rs]]<-maFo_rf
   test[[rs]]<-maFo_rf@layer[[1]]
   new.names[[rs]]<-index
+  new.acc[[rs]]<-acc
   if ( rs == multiTest ) {par(mar=c(2,2,2,3),mfrow=n2mfrow(multiTest))
                          for ( rr in 1:length(test) ) { plot(test[[rr]], col = col(200),main="", legend.shrink=1); mtext(side=3, paste(rr,classNames[new.names[[rr]]], sep=" "),font =2) }}
 
@@ -102,11 +107,16 @@ if ( multiTest > 1 ) { test<-list(); maFo<-list(); new.names<-list(); decision =
   }
   maFo_rf<-maFo[[as.numeric(decision)]]   
   index<-new.names[[as.numeric(decision)]]
+  acc<-new.acc[[as.numeric(decision)]]
 ####################################################################################################################
   
 }else{
 ########################
 maFo_rf<-sample_nb(raster=in.raster,nb_samples=seq(init.samples,init.samples,init.samples),sample_type=sample_type,nb_mean=nb_models,nb_it=nb_it,buffer=buffer,reference=reference,model=model,area=area,mtry=mtry,last=last,seed=seed,init.seed=init.seed)
+
+  index<- maFo_rf$index
+  acc<- maFo_rf$acc
+  maFo_rf<- maFo_rf$obj
 ########################
 }
 
@@ -124,6 +134,10 @@ decision<-readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
     models2<-models2+15}
     print(paste(paste("init.samples = ",sample2),paste("models = ",models2)))
     maFo_rf<-sample_nb(raster=in.raster,nb_samples=seq(sample2,sample2,sample2),sample_type=sample_type,nb_mean=models2,nb_it=nb_it,buffer=buffer,reference=reference,model=model,area=area,mtry=mtry,last=last,seed=seed,init.seed=init.seed)
+    
+    index<- maFo_rf$index
+    acc<- maFo_rf$acc
+    maFo_rf<- maFo_rf$obj
     ########################
 
     dummy<-maFo_rf@layer[[1]]
