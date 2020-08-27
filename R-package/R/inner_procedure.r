@@ -24,7 +24,7 @@
 ###################################################################################
 sample_nb<-function(raster,nb_samples,sample_type,nb_mean,nb_it,buffer,reference,model,area,mtry,last,seed,init.seed) {
 ###
-n_channel<-length(raster::names(raster))
+n_channel<-length(names(raster))
 ###velox
 rID=raster[[1]]
 rID[]=1:(nrow(rID)*ncol(rID))
@@ -114,7 +114,7 @@ for ( i in 1:length(test) ) { if ( i == 1 ) { co<-raster::xyFromCell(raster,test
 pbtn1<-as.data.frame(cbind(rep(1,nrow(co)),co))
 sp::coordinates(pbtn1)<-c("x","y")
 
-test1<-as.matrix(do.call(rbind,test)[,-1]); if (ncol(test1)==1) {test1<-t(test1)}; colnames(test1)<-raster::names(raster)         
+test1<-as.matrix(do.call(rbind,test)[,-1]); if (ncol(test1)==1) {test1<-t(test1)}; colnames(test1)<-names(raster)         
 if ( length(which(is.na(test1))) > 0 ) {pbtn1<-pbtn1[complete.cases(test1),];test1<-test1[complete.cases(test1),]}
 }
 if (class(test1)[1] == "numeric") {test1<-t(matrix(test1))}
@@ -139,7 +139,7 @@ for ( i in 1:length(test) ) { if ( i == 1 ) { co<-xyFromCell(raster,test[[i]][,1
 pbtn2<-as.data.frame(cbind(rep(2,nrow(co)),co))
 sp::coordinates(pbtn2)<-c("x","y")
 
-test2<-as.matrix(do.call(rbind,test)[,-1]);  if (ncol(test2)==1) {test2<-t(test2)}; colnames(test2)<-raster::names(raster)            
+test2<-as.matrix(do.call(rbind,test)[,-1]);  if (ncol(test2)==1) {test2<-t(test2)}; colnames(test2)<-names(raster)            
 if ( length(which(is.na(test2))) > 0 ) {pbtn2<-pbtn2[complete.cases(test2),];test2<-test2[complete.cases(test2),]}
 }
 if (class(test2)[1] == "numeric") {test2<-t(matrix(test2))}
