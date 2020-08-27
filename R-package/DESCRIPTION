@@ -9,7 +9,7 @@ Authors@R:
            comment = "developer at GFZ Potsdam")
 Description: Calculates samples and related classifiers for mapping gradual probabilities of image units (habitat types). It enables a stepwise discrimination of habitat types in imagery and provides reference sample locations and models for classification of complex scenes. 
 License: GPL-3
-Imports: rgdal, raster, rgeos, spatialEco, randomForest, e1071, velox, leaflet, leafem (<= 0.0.1), htmlwidgets
+Imports: rgdal, raster, rgeos, spatialEco, randomForest, e1071, velox, leaflet, leafem, htmlwidgets
 Remotes:url::https://cran.r-project.org/src/contrib/Archive/velox/velox_0.2.0.tar.gz
 Encoding: UTF-8
 LazyData: true
