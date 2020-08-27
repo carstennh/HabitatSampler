@@ -5,8 +5,8 @@
 \title{Perform Habitat Sampling and Probability Mapping}
 \usage{
 multi_Class_Sampling(in.raster, init.samples = 30, sample_type = "regular", nb_models = 200, 
-nb_it = 10, buffer, reference, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", 
-outPath, step = 1, classNames, n_classes, multiTest = 1, RGB = c(19, 20, 21) )
+nb_it = 10, buffer, reference, model = "rf", mtry, last = F, seed = 3, init.seed = "sample", 
+outPath, step = 1, classNames, n_classes, multiTest = 1, RGB = c(1, 2, 3) )
 }
 \arguments{
 \item{in.raster}{satellite time series stack (rasterBrickObject) or just any type of image (*rasterObject)}
@@ -37,7 +37,7 @@ outPath, step = 1, classNames, n_classes, multiTest = 1, RGB = c(19, 20, 21) )
 
 \item{step}{at which step should the procedure start, e.g. use step = 2 if the first habitat is already extracted}
 
-\item{classNames}{vector with class names in the order of reference spectra}
+\item{classNames}{character vector with class names in the order of reference spectra}
 
 \item{n_classes}{total number of classes (habitat types) to be separated}
 
@@ -64,6 +64,17 @@ all files are saved with step number, the *.tif file is additionally saved with 
 This is the main function that performs everything: specify the input imagery, select model type, initiate sampling and model building, generates interactive maps and produce final probability raster output
 }
 \examples{
+###################
+library(HaSa)
+raster::plotRGB(Sentinel_Stack_2018, r = 19, g = 20, b = 21, stretch = "lin", axes = T)
+sp::plot(Example_Reference_Points, pch = 21, bg = "red", col = "yellow", cex = 1.9, lwd = 2.5, add = T)
+multi_Class_Sampling(in.raster = Sentinel_Stack_2018, init.samples = 30, sample_type = "regular", nb_models = 200, nb_it = 10, buffer = 15, 
+reference = Example_Reference_Points, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", outPath="C:/", step = 1, 
+classNames = c("deciduous", "coniferous", "heath_young", "heath_old", "heath_shrub", "bare_ground", "xeric_grass"), n_classes = 7, 
+multiTest = 1, RGB = c(19, 20, 21))
+###################
+an interactive map is plotting in a web browser
+
 next steps start automatically, after command line input of:
 1) number of the apropriate map if multiTest > 1
 2) probability threshold for habitat type extraction 
