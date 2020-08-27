@@ -231,7 +231,6 @@ dummy<-raster::brick(result1)
 dummy<-raster::calc(dummy,fun=sum)
 layer[[1]]<-dummy
 
-setClass("Habitat",representation(models="list", ref_samples="list", switch="vector", layer="list", mod_all="list", class_ind="numeric", seeds="numeric"))
 obj<-new("Habitat", models = models, ref_samples = points, switch = switch, layer = layer, mod_all = mod_all, class_ind = dif, seeds = seed2)
 out<-list(index=index, acc = acc, obj = obj)
 return(out)
