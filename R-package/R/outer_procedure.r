@@ -71,7 +71,6 @@ area <- as(raster::extent(in.raster), 'SpatialPolygons')
 area <- sp::SpatialPolygonsDataFrame(area, data.frame( ID=1:length(area)))
 sp::proj4string(area)<-sp::proj4string(in.raster)
 
-r<-RGB[1]; g<-RGB[2]; b<-RGB[3]
 col<-colorRampPalette(c("lightgrey","orange","yellow","limegreen","forestgreen"))
 
 #############################################################################################
@@ -121,7 +120,7 @@ maFo_rf<-sample_nb(raster=in.raster,nb_samples=seq(init.samples,init.samples,ini
 }
 
 dummy<-maFo_rf@layer[[1]]
-iplot(x=dummy,y=a1,HaTy=classNames[index])
+iplot(x=dummy,y=in.raster,HaTy=classNames[index],r=RGB[1], g=RGB[2], b=RGB[3], acc=acc, outPath=outPath)
 
 decision<-readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
 
@@ -141,7 +140,7 @@ decision<-readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
     ########################
 
     dummy<-maFo_rf@layer[[1]]
-    iplot(x=dummy,y=a1,HaTy=classNames[index])
+    iplot(x=dummy,y=in.raster,HaTy=classNames[index],r=RGB[1], g=RGB[2], b=RGB[3], acc=acc, outPath=outPath)
     
     decision<-readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
     }
