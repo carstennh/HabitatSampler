@@ -74,19 +74,19 @@ mv<- leaflet::leaflet()
   mv<- leaflet::addProviderTiles(map=mv, "CartoDB.PositronNoLabels")
   mv<- leaflet::addRasterImage(map=mv, x, colors=pal, opacity = 1, project = TRUE, method="ngb", group = HaTy,
                  layerId = paste(HaTy, paste("accuracy = ",acc))) 
-  mv<- leafem::addImageQuery(map=mv, x, project = TRUE,
-                layerId = paste(HaTy, paste("accuracy = ",acc)), prefix = "Habitat Type")
   mv<- leaflet::addRasterImage(map=mv, rr, colors=palo, opacity = 1, project = TRUE, method="ngb", group = "RGB Composite",
                  layerId = "RGB Composite") 
+  mv<- leafem::addImageQuery(map=mv, x, project = TRUE,
+                layerId = paste(HaTy, paste("accuracy = ",acc)), prefix = "Habitat Type")
   mv<- leaflet::addLegend(map=mv, "bottomright",pal = pal, values = raster::cellStats(x,"range"),
                title = "Habitat Type Probability",opacity = 1)
-    mv<- leaflet::addLayersControl(map=mv, overlayGroups = c("RGB Composite",HaTy))
+  mv<- leaflet::addLayersControl(map=mv, overlayGroups = c("RGB Composite", HaTy))
  
  if(.Platform$OS.type == "unix") {  
                                                         htmlwidgets::saveWidget(mv, paste(outPath,'leaflet.html',sep="")) 
                                                         cat("<style>.leaflet-container {cursor: crosshair !important;}</style>", file = paste(outPath,'leaflet.html',sep=""), append = TRUE)
                                                         utils::browseURL(paste(outPath,'leaflet.html',sep=""),browser="firefox")
-} else {                                            htmlwidgets::saveWidget(mv, selfcontained = FALSE, paste(outPath,'leaflet.html',sep=""))
+} else {                                            htmlwidgets::saveWidget(mv, paste(outPath,'leaflet.html',sep=""))
                                                         cat("<style>.leaflet-container {cursor: crosshair !important;}</style>", file = paste(outPath,'leaflet.html',sep=""), append = TRUE)
                                                         utils::browseURL(paste(outPath,'leaflet.html',sep=""))
 }
