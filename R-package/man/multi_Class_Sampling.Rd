@@ -68,12 +68,13 @@ This is the main function that performs everything: specify the input imagery, s
 library(HaSa)
 raster::plotRGB(Sentinel_Stack_2018, r = 19, g = 20, b = 21, stretch = "lin", axes = T)
 sp::plot(Example_Reference_Points, pch = 21, bg = "red", col = "yellow", cex = 1.9, lwd = 2.5, add = T)
+#specify a valid output path e.g.  "C:/Users/.../"
 multi_Class_Sampling(in.raster = Sentinel_Stack_2018, init.samples = 30, sample_type = "regular", nb_models = 200, nb_it = 10, buffer = 15, 
-reference = Example_Reference_Points, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", outPath="C:/", step = 1, 
+reference = Example_Reference_Points, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", outPath="C:/User/", step = 1, 
 classNames = c("deciduous", "coniferous", "heath_young", "heath_old", "heath_shrub", "bare_ground", "xeric_grass"), n_classes = 7, 
 multiTest = 1, RGB = c(19, 20, 21))
 ###################
-an interactive map is plotting in a web browser
+for threshold evaluation an interactive map is plotted in the web browser
 
 next steps start automatically, after command line input of:
 1) number of the apropriate map if multiTest > 1
@@ -81,8 +82,6 @@ next steps start automatically, after command line input of:
 3) decision to sample again y/n
 4) adjust starting number of samples and number of models
   
-for threshold evaluation an interactive map is plotted in the web browser
-
 if convergence fails / no models can be selected / init.samples are to little / or another error occurs, restart next step with: 
 in.raster = out.raster 
 reference = out.reference 
