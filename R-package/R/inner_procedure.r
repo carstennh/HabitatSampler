@@ -91,7 +91,7 @@ if (j == n & oobe[j,k] >= 0.02) {models[[k]]<-"NULL"; points[[k]]<-"NULL"; break
 model_pre<-model1
 pbtn1_pre<-pbtn1
 pbtn2_pre<-pbtn2
-oobe<<-oobe
+oobe<-oobe
 ########################################################################################################################################
 if (model == "rf") {correct<-which(as.numeric(as.character(classes)) - as.numeric(as.character(model1$predicted)) == 0)}
 if (model == "svm") {correct<-which(as.numeric(as.character(model1$fitted))-as.numeric(as.character(classes)) == 0)}
@@ -193,9 +193,9 @@ if ( i > 2) {if (dummy3[ref]-max(dummy3[-ref]) > dif[(rr-1),jj]) {dummy<-dummy; 
 }}
 m[l]<-max(dif[2,],na.rm=T)
 }
-index<<-which.max(dif[2,])
+index<-which.max(dif[2,])
 ch<-as.numeric(na.omit(channel[,index]));if(length(ch) == 0) {stop("No optimal classifier - would you be so kind to adjust init.samples & nb_models, please")}
-acc<<-(round(m[l]^2,2)/0.25)
+acc<-(round(m[l]^2,2)/0.25)
 
 print(paste("class=",index,"  difference=",(round(m[l]^2,2)/0.25),sep=""))
 
@@ -232,5 +232,7 @@ dummy<-raster::calc(dummy,fun=sum)
 layer[[1]]<-dummy
 
 setClass("Habitat",representation(models="list", ref_samples="list", switch="vector", layer="list", mod_all="list", class_ind="numeric", seeds="numeric"))
-new("Habitat", models = models, ref_samples = points, switch = switch, layer = layer, mod_all = mod_all, class_ind = dif, seeds = seed2)
+obj<-new("Habitat", models = models, ref_samples = points, switch = switch, layer = layer, mod_all = mod_all, class_ind = dif, seeds = seed2)
+out<-list(index=index, acc = acc, obj = obj)
+return(out)
 }
