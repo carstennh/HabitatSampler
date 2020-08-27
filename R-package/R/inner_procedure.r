@@ -135,7 +135,7 @@ test<-ras.vx$extract(sp=poly)
 
 for ( i in 1:length(test) ){s1<-dim(test[[i]])[1]; if (s1 <= 5) {test[[i]]<-test[[i]] }else { set.seed(seed); test[[i]]<-test[[i]][sample(c(1:s1),5,replace=F),] }}
 
-for ( i in 1:length(test) ) { if ( i == 1 ) { co<-xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,xyFromCell(raster,test[[i]][,1]))} }
+for ( i in 1:length(test) ) { if ( i == 1 ) { co<-raster::xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,raster::xyFromCell(raster,test[[i]][,1]))} }
 pbtn2<-as.data.frame(cbind(rep(2,nrow(co)),co))
 sp::coordinates(pbtn2)<-c("x","y")
 
