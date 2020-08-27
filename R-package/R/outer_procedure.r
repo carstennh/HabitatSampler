@@ -68,7 +68,7 @@ multi_Class_Sampling<-function(in.raster, init.samples=30, sample_type="regular"
 if (class(reference) == "SpatialPointsDataFrame") { reference<-as.data.frame(raster::extract(in.raster,reference)) }
 
 area <- as(raster::extent(in.raster), 'SpatialPolygons') 
-area <- sp::SpatialPolygonsDataFrame(area, data.frame( ID=1:length(p)))
+area <- sp::SpatialPolygonsDataFrame(area, data.frame( ID=1:length(area)))
 sp::proj4string(area)<-sp::proj4string(in.raster)
 
 r<-RGB[1]; g<-RGB[2]; b<-RGB[3]
