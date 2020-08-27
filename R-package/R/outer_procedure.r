@@ -74,10 +74,6 @@ sp::proj4string(area)<-sp::proj4string(in.raster)
 r<-RGB[1]; g<-RGB[2]; b<-RGB[3]
 col<-colorRampPalette(c("lightgrey","orange","yellow","limegreen","forestgreen"))
 
-source("inner_procedure.r")
-source("clip,r")
-source("plot_interactive.r")
-
 #############################################################################################
 r<-n_classes
 if (names(in.raster)[1] != colnames(reference)[1]) { colnames(reference)<-names(in.raster) }
