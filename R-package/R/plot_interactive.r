@@ -23,7 +23,7 @@
 
 ###################################################################################
 ###########################################################################################################
-iplot<-function(x,y,HaTy) {#x=layerInfo, y=RGB Image
+iplot<-function(x,y,HaTy,r,g,b, acc, outPath) {#x=layerInfo, y=RGB Image
 ###########################################################################################################
 if (exists("color")==F) {pal <- leaflet::colorNumeric(c("lightgrey","orange","yellow","limegreen","forestgreen"), domain=NULL, na.color = "transparent")}else
                                    {pal <- leaflet::colorNumeric(color, domain=NULL, na.color = "transparent")}
@@ -38,10 +38,10 @@ if (exists("color")==F) {pal <- leaflet::colorNumeric(c("lightgrey","orange","ye
 }
 palo<-function(y) { d<-which(y<=0); if (length(d)>0) {y[d]<-1;z[y]}else {z[y]} }
 
-r=r; g=g; b=b;maxpixels=10000000;colNA="#FFFAFA99";bgalpha=0;alpha=1
-  	r <- raster::sampleRegular(raster(y,r), maxpixels,  asRaster=TRUE, useGDAL=TRUE)
-	g <- raster::sampleRegular(raster(y,g), maxpixels, asRaster=TRUE, useGDAL=TRUE)
-	b <- raster::sampleRegular(raster(y,b), maxpixels,  asRaster=TRUE, useGDAL=TRUE)
+    maxpixels=10000000;colNA="#FFFAFA99";bgalpha=0;alpha=1
+  	r <- raster::sampleRegular(raster::raster(y,r), maxpixels,  asRaster=TRUE, useGDAL=TRUE)
+	g <- raster::sampleRegular(raster::raster(y,g), maxpixels, asRaster=TRUE, useGDAL=TRUE)
+	b <- raster::sampleRegular(raster::raster(y,b), maxpixels,  asRaster=TRUE, useGDAL=TRUE)
 	
     RGB <- cbind(raster::getValues(r), raster::getValues(g), raster::getValues(b))
     naind<-which(is.na(RGB[,1]))
@@ -53,7 +53,7 @@ r=r; g=g; b=b;maxpixels=10000000;colNA="#FFFAFA99";bgalpha=0;alpha=1
     scale <- 255
     bg <- grDevices::col2rgb(colNA)
     bg <- grDevices::rgb(bg[1], bg[2], bg[3], alpha=bgalpha, max=255)
-    z <- rep( bg, times=ncell(r))
+    z <- rep( bg, times=raster::ncell(r))
     if (length(naind) >0) {z[-naind] <- grDevices::rgb(RGB[,1], RGB[,2], RGB[,3],  max=scale)}else
                                        {z <- grDevices::rgb(RGB[,1], RGB[,2], RGB[,3],  max=scale)}#hier sind die finalen Farbwerte
 ######
@@ -69,18 +69,18 @@ raster::values(rr)<-1:raster::ncell(rr)
 
 ###########################################################################################################
 ##[2] Create Leaflet Html output for Webbrowser
-mv<- leaflet::leaflet() %>%
+mv<- leaflet::leaflet() 
   #addTiles(urlTemplate ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>% 
-  leaflet::addProviderTiles("CartoDB.PositronNoLabels") %>%
-  leaflet::addRasterImage(x, colors=pal, opacity = 1, project = TRUE, method="ngb", group = HaTy,
-                 layerId = paste(HaTy, paste("accuracy = ",acc))) %>%
-  leaflet::addRasterImage(rr, colors=palo, opacity = 1, project = TRUE, method="ngb", group = "RGB Composite",
-                 layerId = "RGB Composite") %>%
-  leaflet::addLegend("bottomright",pal = pal, values = cellStats(x,"range"),
-               title = "Habitat Type Probability",opacity = 1)%>%
-  leafem::addImageQuery(x, project = TRUE,
-                layerId = paste(HaTy, paste("accuracy = ",acc)), prefix = "Habitat Type") %>%
-  leaflet::addLayersControl(overlayGroups = c("RGB Composite",HaTy))
+  mv<- leaflet::addProviderTiles(map=mv, "CartoDB.PositronNoLabels")
+  mv<- leaflet::addRasterImage(map=mv, x, colors=pal, opacity = 1, project = TRUE, method="ngb", group = HaTy,
+                 layerId = paste(HaTy, paste("accuracy = ",acc))) 
+  mv<- leaflet::addRasterImage(map=mv, rr, colors=palo, opacity = 1, project = TRUE, method="ngb", group = "RGB Composite",
+                 layerId = "RGB Composite") 
+  mv<- leaflet::addLegend(map=mv, "bottomright",pal = pal, values = raster::cellStats(x,"range"),
+               title = "Habitat Type Probability",opacity = 1)
+  mv<- leafem::addImageQuery(map=mv, x, project = TRUE,
+                layerId = paste(HaTy, paste("accuracy = ",acc)), prefix = "Habitat Type")
+  mv<- leaflet::addLayersControl(map=mv, overlayGroups = c("RGB Composite",HaTy))
  
  if(.Platform$OS.type == "unix") {  
                                                         htmlwidgets::saveWidget(mv, paste(outPath,'leaflet.html',sep="")) 
