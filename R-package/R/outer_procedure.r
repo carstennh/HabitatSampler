@@ -55,7 +55,7 @@ multi_Class_Sampling<-function(in.raster, init.samples=30, sample_type="regular"
 ###first steps: data preparation
 if (class(reference) == "SpatialPointsDataFrame") { reference<-as.data.frame(raster::extract(in.raster,reference)) }
 
-area <- as(extent(in.raster), 'SpatialPolygons') 
+area <- as(raster::extent(in.raster), 'SpatialPolygons') 
 area <- sp::SpatialPolygonsDataFrame(area, data.frame( ID=1:length(p)))
 sp::proj4string(area)<-sp::proj4string(in.raster)
 
