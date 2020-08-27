@@ -86,7 +86,7 @@ mv<- leaflet::leaflet()
                                                         htmlwidgets::saveWidget(mv, paste(outPath,'leaflet.html',sep="")) 
                                                         cat("<style>.leaflet-container {cursor: crosshair !important;}</style>", file = paste(outPath,'leaflet.html',sep=""), append = TRUE)
                                                         utils::browseURL(paste(outPath,'leaflet.html',sep=""),browser="firefox")
-} else {                                            htmlwidgets::saveWidget(mv, paste(outPath,'leaflet.html',sep=""))
+} else {                                            htmlwidgets::saveWidget(mv, selfcontained = FALSE, paste(outPath,'leaflet.html',sep=""))
                                                         cat("<style>.leaflet-container {cursor: crosshair !important;}</style>", file = paste(outPath,'leaflet.html',sep=""), append = TRUE)
                                                         utils::browseURL(paste(outPath,'leaflet.html',sep=""))
 }
