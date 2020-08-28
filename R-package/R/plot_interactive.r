@@ -72,12 +72,16 @@ raster::values(rr)<-1:raster::ncell(rr)
 mv<- leaflet::leaflet() 
   #addTiles(urlTemplate ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>% 
   mv<- leaflet::addProviderTiles(map=mv, "CartoDB.PositronNoLabels")
-  mv<- leaflet::addRasterImage(map=mv, x, colors=pal, opacity = 1, project = TRUE, method="ngb", group = paste(HaTy, paste("accuracy = ",acc)),
-                 layerId = paste(HaTy, paste("accuracy = ",acc))) 
+
   mv<- leaflet::addRasterImage(map=mv, rr, colors=palo, opacity = 1, project = TRUE, method="ngb", group = "RGB Composite",
                  layerId = "RGB Composite") 
+ 
+  mv<- leaflet::addRasterImage(map=mv, x, colors=pal, opacity = 1, project = TRUE, method="ngb", group = HaTy,
+                 layerId = HaTy) 
+  
   mv<- leafem::addImageQuery(map=mv, x, project = TRUE,
-                layerId = paste(HaTy, paste("accuracy = ",acc)), prefix = "Habitat Type")
+                layerId = HaTy, prefix = "Habitat Type")
+
   mv<- leaflet::addLegend(map=mv, "bottomright",pal = pal, values = raster::cellStats(x,"range"),
                title = "Habitat Type Probability",opacity = 1)
   mv<- leaflet::addLayersControl(map=mv, overlayGroups = c("RGB Composite", HaTy))
