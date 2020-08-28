@@ -149,6 +149,9 @@ decision<-readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
 run1<-maFo_rf
 if (i <10) {ni<-paste("0",i,sep="")}else{ni<-i}
 save(run1,file=paste(outPath,paste("Run",ni,sep=""),sep=""))
+###raster issue
+comment(dummy@crs) <- ""
+###
 raster :: writeRaster(dummy,filename=paste(outPath,paste("step_",ni,paste("_",classNames[index],sep=""),".tif",sep=""),sep=""), format="GTiff")
 #savePlot("step_1.png",type="png")
 kml<-raster :: projectRaster(dummy, crs="+proj=longlat +datum=WGS84", method='ngb')
