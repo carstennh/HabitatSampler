@@ -50,11 +50,15 @@ Key Features
 * the alogrthm can be applied on **variable image categories** in complex scenes
 * the algorithm is tranferable to **variable input imagery** 
 
+Citation
+----------------
+Neumann, C. (2020): Habitat sampler—A sampling algorithm for habitat type delineation in remote sensing imagery. - Diversity and Distributions, 26 (12), 1752-1766. `DOI: <https://doi.org/10.1111/ddi.13165>`__.
+
 Credits
 ----------------
 
 HaSa was developed by Carsten Neumann (Helmholtz Centre Potsdam GFZ German Research Centre for Geosciences) within the context of the
 `NaTec - KRH <http://www.heather-conservation-technology.com/>`__ project funded by the German Federal Ministry of Education and Research (BMBF) (grant number: 01 LC 1602A).
 
-The test data represent pre-processed Copernicus Sentinel-2 satellite imagery (ESA 2018). Pre-processing was done using GTS2 and AROSICS. 
+The test data represent pre-processed Copernicus Sentinel-2 satellite imagery (ESA 2018). Pre-processing was done using `GTS2 <https://www.gfz-potsdam.de/en/section/remote-sensing-and-geoinformatics/projects/closed-projects/gts2/>` and `AROSICS <https://github.com/GFZ/arosics>`__. 
 
