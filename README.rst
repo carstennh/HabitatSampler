@@ -18,6 +18,9 @@ How to use
 --------------------
 * You need R to install the **package HaSa** that includes all functions and test data
 * devtools::install_github("carstennh/HabitatSampler", subdir="R-package", build_vignettes = TRUE)
+* Sometimes there are problems, then do **1.** devtools:: install_version("velox", version = "0.2.0", repos = "https://cran.uni-muenster.de/") 
+* For Windows operating systems the `Rtools <https://cran.r-project.org/bin/windows/Rtools/>`__ are needed
+
 * library(HaSa) and list datasets: data(package="HaSa") and functions: lsf.str("package:HaSa") or use library(help="HaSa")
 * there are information available about programm execution and function behavior in Rmarkdown: `HabitatSampler_Usage <https://github.com/carstennh/HabitatSampler/tree/master/R-package/vignettes>`__
 
