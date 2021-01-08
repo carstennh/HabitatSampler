@@ -31,8 +31,8 @@ n_channel<-length(names(raster))
 ###velox
 rID=raster[[1]]
 rID[]=1:(nrow(rID)*ncol(rID))
-r=stack(rID,raster)
-ras.vx <- velox(r)
+r=raster::stack(rID,raster)
+ras.vx <- velox::velox(r)
 ###
 l<-1        ###6. opt=260
 model1<-1
@@ -53,15 +53,15 @@ points<-list()
 dif<-matrix(NA,nrow=nb_mean,ncol=nrow(reference))
 channel<-matrix(NA,nrow=nb_mean,ncol=nrow(reference))
 switch<-matrix(NA,nrow=nb_mean,ncol=nrow(reference))
-pb <- txtProgressBar(min=1, max=nb_mean, style=3)
+pb <- utils::txtProgressBar(min=1, max=nb_mean, style=3)
 
 for ( k in 1:nb_mean) {
 for ( j in 1:n ) {	
 ###Vorbereitung Klassifizierung
 if ( j == 1 ) {classes<-as.factor(c(1,1))
-if (sample_type == "random") {set.seed(seed2[k]); pbt<-sampleRandom(raster, size=sample_size,sp=T)}
-if (sample_type == "regular") {pbt<-sampleRegular(raster, size=sample_size,sp=T)}
-pbt<-point.in.poly(pbt,area)[,1:n_channel]
+if (sample_type == "random") {set.seed(seed2[k]); pbt<-raster::sampleRandom(raster, size=sample_size,sp=T)}
+if (sample_type == "regular") {pbt<-raster::sampleRegular(raster, size=sample_size,sp=T)}
+pbt<-spatialEco::point.in.poly(pbt,area)[,1:n_channel]
 
 f<-which(is.na(pbt@data[1]))
 if ( length(f) != 0 ) {pbt<-pbt[-f,]}
@@ -73,12 +73,12 @@ data<-as.data.frame(cbind(classes,pbt@data))
 }
 ########################################################################################################################################
 if (model == "rf") {
-model1<- randomForest(as.factor(classes) ~ ., data = data,mtry=mtry)
+model1<- randomForest::randomForest(as.factor(classes) ~ ., data = data,mtry=mtry)
 if (is.na(mean(model1$err.rate[,1])) == TRUE) {break}
 oobe[j,k]<-mean(model1$err.rate[,1])}
 ###
 if (model == "svm") {
-model1<- svm(as.factor(classes) ~ ., data = data)
+model1<- e1071::svm(as.factor(classes) ~ ., data = data)
 co<-length(which(as.numeric(as.character(model1$fitted))-as.numeric(as.character(classes)) == 0))
 if (co == 0) {break}
 oobe[j,k]<-1-(co/length(classes))}
@@ -105,17 +105,17 @@ if ( length(which(classes[correct] == 1)) == 0 ) {if ( j ==1) {break}else{pbtn1<
 ###neue Samples aus richtig klassifizierten
 p1<-pbt@coords[d1,]
 pbtn1<-as.data.frame(cbind(classes[d1],matrix(p1,ncol=2))) ##coordinaten
-coordinates(pbtn1)<-c("V2","V3")
-proj4string(pbtn1) <- proj4string(pbt)
+sp::coordinates(pbtn1)<-c("V2","V3")
+sp::proj4string(pbtn1) <- sp::proj4string(pbt)
 
-poly <- gBuffer(spgeom=pbtn1, width=buffer,byid=TRUE)
+poly <- rgeos::gBuffer(spgeom=pbtn1, width=buffer,byid=TRUE)
 test<-ras.vx$extract(sp=poly)
 
 for ( i in 1:length(test) ){s1<-dim(test[[i]])[1]; if (s1 <= 5) {test[[i]]<-test[[i]] }else { set.seed(seed); test[[i]]<-test[[i]][sample(c(1:s1),5,replace=F),] }}
 
-for ( i in 1:length(test) ) { if ( i == 1 ) { co<-xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,xyFromCell(raster,test[[i]][,1]))} }
+for ( i in 1:length(test) ) { if ( i == 1 ) { co<-raster::xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,raster::xyFromCell(raster,test[[i]][,1]))} }
 pbtn1<-as.data.frame(cbind(rep(1,nrow(co)),co))
-coordinates(pbtn1)<-c("x","y")
+sp::coordinates(pbtn1)<-c("x","y")
 
 test1<-as.matrix(do.call(rbind,test)[,-1]); if (ncol(test1)==1) {test1<-t(test1)}; colnames(test1)<-names(raster)         
 if ( length(which(is.na(test1))) > 0 ) {pbtn1<-pbtn1[complete.cases(test1),];test1<-test1[complete.cases(test1),]}
@@ -130,17 +130,17 @@ if ( length(which(classes[correct] == 2)) == 0 ) {if ( j ==1) {break}else{pbtn2<
 ###neue Samples aus richtig klassifizierten
 p2<-pbt@coords[d2,]
 pbtn2<-as.data.frame(cbind(classes[d2],matrix(p2,ncol=2))) 
-coordinates(pbtn2)<-c("V2","V3")
-proj4string(pbtn2) <- proj4string(pbt)
+sp::coordinates(pbtn2)<-c("V2","V3")
+sp::proj4string(pbtn2) <- sp::proj4string(pbt)
 
-poly <- gBuffer(spgeom=pbtn2, width=buffer,byid=TRUE)
+poly <- rgeos::gBuffer(spgeom=pbtn2, width=buffer,byid=TRUE)
 test<-ras.vx$extract(sp=poly)
 
 for ( i in 1:length(test) ){s1<-dim(test[[i]])[1]; if (s1 <= 5) {test[[i]]<-test[[i]] }else { set.seed(seed); test[[i]]<-test[[i]][sample(c(1:s1),5,replace=F),] }}
 
-for ( i in 1:length(test) ) { if ( i == 1 ) { co<-xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,xyFromCell(raster,test[[i]][,1]))} }
+for ( i in 1:length(test) ) { if ( i == 1 ) { co<-raster::xyFromCell(raster,test[[i]][,1]) }else {co<-rbind(co,raster::xyFromCell(raster,test[[i]][,1]))} }
 pbtn2<-as.data.frame(cbind(rep(2,nrow(co)),co))
-coordinates(pbtn2)<-c("x","y")
+sp::coordinates(pbtn2)<-c("x","y")
 
 test2<-as.matrix(do.call(rbind,test)[,-1]);  if (ncol(test2)==1) {test2<-t(test2)}; colnames(test2)<-names(raster)            
 if ( length(which(is.na(test2))) > 0 ) {pbtn2<-pbtn2[complete.cases(test2),];test2<-test2[complete.cases(test2),]}
@@ -170,17 +170,17 @@ classes<-data$classes
 pbt<-rbind(pbtn1,pbtn2)
 
 }
-setTxtProgressBar(pb, k)}
+utils::setTxtProgressBar(pb, k)}
 
 if (length(models) == 0 | length(which(models=="NULL")) == length(models)) {stop("No Models - would you be so kind to increase init.samples, please")}
 if ( length(which(models=="NULL")) > 0) {models<-models[-which(models=="NULL")]} 
 for (jj in 1:nrow(reference)) {ref<-jj;rr=3
 for ( i in 1:length(models) ) {
-if ( i == 1 ) {dummy<-as.numeric(as.character(predict(models[[i]],newdata=reference)))
+if ( i == 1 ) {dummy<-as.numeric(as.character(stats::predict(models[[i]],newdata=reference)))
 
 if (dummy[ref] != 2) {dummy[dummy==1]<-3;dummy[dummy==2]<-1;dummy[dummy==3]<-2;switch[i,jj]<-i}}else
 
-{dummy2<-as.numeric(as.character(predict(models[[i]],newdata=reference)))
+{dummy2<-as.numeric(as.character(stats::predict(models[[i]],newdata=reference)))
 
 if (dummy2[ref] != 2) {dummy2[dummy2==1]<-3;dummy2[dummy2==2]<-1;dummy2[dummy2==3]<-2;switch[i,jj]<-i}
 
@@ -218,20 +218,20 @@ switch<-switch
 
 j<-1
 for ( i in ch ) {
-if ( j == 1 ) {result1<-predict(object=raster, model=models[[i]])
+if ( j == 1 ) {result1<-raster::predict(object=raster, model=models[[i]])
 
-if (is.na(switch[i]) == F) {result1<-reclassify(result1,rbind(c(0.5,1.5,2),c(1.6,2.5,1)))}}else
+if (is.na(switch[i]) == F) {result1<-raster::reclassify(result1,rbind(c(0.5,1.5,2),c(1.6,2.5,1)))}}else
 
-{result1<-stack(result1,predict(object=raster, model=models[[i]]))
+{result1<-raster::stack(result1,raster::predict(object=raster, model=models[[i]]))
 
-if (is.na(switch[i]) == F) {result1[[j]]<-reclassify(result1[[j]],rbind(c(0.5,1.5,2),c(1.6,2.5,1)))}
+if (is.na(switch[i]) == F) {result1[[j]]<-raster::reclassify(result1[[j]],rbind(c(0.5,1.5,2),c(1.6,2.5,1)))}
 
 }
 print(j)
 j<-j+1}
 ###
-dummy<-brick(result1)
-dummy<-calc(dummy,fun=sum)
+dummy<-raster::brick(result1)
+dummy<-raster::calc(dummy,fun=sum)
 layer[[1]]<-dummy
 
 setClass("Habitat",representation(models="list", ref_samples="list", switch="vector", layer="list", mod_all="list", class_ind="numeric", seeds="numeric"))
