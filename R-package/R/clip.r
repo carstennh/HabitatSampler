@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-###################################################################################
+################################################################################
 clip <- function(raster, shape) {
   raster::rasterOptions(progress = "text")
   a1_crop <- raster::crop(raster, shape)

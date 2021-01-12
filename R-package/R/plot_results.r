@@ -81,7 +81,7 @@ plot_Results <- function(inPath, color = NULL) {
             breaks = brk,
             legend.shrink = 1
         )
-    } else{
+    } else {
         plot(
             modelHS,
             col = color,

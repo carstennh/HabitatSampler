@@ -172,8 +172,7 @@ sample_nb <- function(raster,
           test <- ras.vx$extract(sp = poly)
 
           for (i in 1:length(test)) {
-            s1 <-
-              dim(test[[i]])[1]
+            s1 <- dim(test[[i]])[1]
             if (s1 <= 5) {
               test[[i]] <- test[[i]]
             } else {
@@ -275,8 +274,7 @@ sample_nb <- function(raster,
             d3 <- sample(1:nrow(pbtn1), nrow(pbtn2), replace = F)
             pbtn1 <- pbtn1[d3,]
             test1 <- test1[d3,]
-          } else
-          {
+          } else {
             set.seed(seed)
             d4 <- sample(1:nrow(pbtn2), nrow(pbtn1), replace = F)
             pbtn2 <- pbtn2[d4,]
@@ -306,12 +304,12 @@ sample_nb <- function(raster,
         names(data)[1] <- "classes"
         classes <- data$classes
         pbt <- rbind(pbtn1, pbtn2)
-
       }
       utils::setTxtProgressBar(pb, k)
     }
 
-    if (length(models) == 0 | length(which(models == "NULL")) == length(models)) {
+    if (length(models) == 0 |
+        length(which(models == "NULL")) == length(models)) {
       stop("No Models - would you be so kind to increase init.samples, please")
     }
     if (length(which(models == "NULL")) > 0) {
@@ -324,7 +322,6 @@ sample_nb <- function(raster,
         if (i == 1) {
           dummy <- as.numeric(
             as.character(stats::predict(models[[i]], newdata = reference)))
-
           if (dummy[ref] != 2) {
             dummy[dummy == 1] <- 3
             dummy[dummy == 2] <- 1
