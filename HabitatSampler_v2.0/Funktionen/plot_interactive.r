@@ -27,17 +27,21 @@ iplot <- function(x, y, HaTy) {
   #x=layerInfo, y=RGB Image
   ##############################################################################
   if (exists("color") == F) {
-    pal <- colorNumeric(
-      c("lightgrey",
-        "orange",
-        "yellow",
-        "limegreen",
-        "forestgreen"),
-      domain = NULL,
-      na.color = "transparent"
-    )
+    pal <-
+      leaflet::colorNumeric(
+        c(
+          "lightgrey",
+          "orange",
+          "yellow",
+          "limegreen",
+          "forestgreen"
+        ),
+        domain = NULL,
+        na.color = "transparent"
+      )
   } else {
-    pal <- colorNumeric(color, domain = NULL, na.color = "transparent")
+    pal <-
+      leaflet::colorNumeric(color, domain = NULL, na.color = "transparent")
   }
   ##############################################################################
   ###[1] Create RGB Colors (z) and RGB Image Representation (rr) -> code based
@@ -49,7 +53,6 @@ iplot <- function(x, y, HaTy) {
     temp[temp > 255] <- 255
     return(temp)
   }
-
   palo <- function(y) {
     d <- which(y <= 0)
     if (length(d) > 0) {
@@ -67,20 +70,22 @@ iplot <- function(x, y, HaTy) {
   colNA = "#FFFAFA99"
   bgalpha = 0
   alpha = 1
-  r <- sampleRegular(raster(y, r),
-                     maxpixels,
-                     asRaster = TRUE,
-                     useGDAL = TRUE)
-  g <- sampleRegular(raster(y, g),
-                     maxpixels,
-                     asRaster = TRUE,
-                     useGDAL = TRUE)
-  b <- sampleRegular(raster(y, b),
-                     maxpixels,
-                     asRaster = TRUE,
-                     useGDAL = TRUE)
+  r <- raster::sampleRegular(raster::raster(y, r),
+                             maxpixels,
+                             asRaster = TRUE,
+                             useGDAL = TRUE)
+  g <- raster::sampleRegular(raster::raster(y, g),
+                             maxpixels,
+                             asRaster = TRUE,
+                             useGDAL = TRUE)
+  b <- raster::sampleRegular(raster::raster(y, b),
+                             maxpixels,
+                             asRaster = TRUE,
+                             useGDAL = TRUE)
 
-  RGB <- cbind(getValues(r), getValues(g), getValues(b))
+  RGB <- cbind(raster::getValues(r),
+               raster::getValues(g),
+               raster::getValues(b))
   naind <- which(is.na(RGB[, 1]))
   RGB <- stats::na.omit(RGB)
   RGB[, 1] <- linStretchVec(RGB[, 1])
@@ -90,9 +95,10 @@ iplot <- function(x, y, HaTy) {
   scale <- 255
   bg <- grDevices::col2rgb(colNA)
   bg <- grDevices::rgb(bg[1], bg[2], bg[3], alpha = bgalpha, max = 255)
-  z <- rep(bg, times = ncell(r))
+  z <- rep(bg, times = raster::ncell(r))
   if (length(naind) > 0) {
-    z[-naind] <- grDevices::rgb(RGB[, 1], RGB[, 2], RGB[, 3],  max = scale)
+    z[-naind] <-
+      grDevices::rgb(RGB[, 1], RGB[, 2], RGB[, 3],  max = scale)
   } else {
     z <- grDevices::rgb(RGB[, 1], RGB[, 2], RGB[, 3],  max = scale)
   }#hier sind die finalen Farbwerte
@@ -117,14 +123,14 @@ iplot <- function(x, y, HaTy) {
   #graphics::rasterImage(z, bb[1], bb[3], bb[2], bb[4], interpolate=F)
   ######
   rr <- x
-  values(rr) <- 1:ncell(rr)
+  raster::values(rr) <- 1:raster::ncell(rr)
 
   ##############################################################################
   ##[2] Create Leaflet Html output for Webbrowser
-  mv <- leaflet() %>%
+  mv <- leaflet::leaflet() %>%
     #addTiles(urlTemplate ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>%
-    addProviderTiles("CartoDB.PositronNoLabels") %>%
-    addRasterImage(
+    leaflet::addProviderTiles("CartoDB.PositronNoLabels") %>%
+    leaflet::addRasterImage(
       x,
       colors = pal,
       opacity = 1,
@@ -133,7 +139,7 @@ iplot <- function(x, y, HaTy) {
       group = HaTy,
       layerId = paste(HaTy, paste("accuracy = ", acc))
     ) %>%
-    addRasterImage(
+    leaflet::addRasterImage(
       rr,
       colors = palo,
       opacity = 1,
@@ -142,7 +148,7 @@ iplot <- function(x, y, HaTy) {
       group = "RGB Composite",
       layerId = "RGB Composite"
     ) %>%
-    addLegend(
+    leaflet::addLegend(
       "bottomright",
       pal = pal,
       values = cellStats(x, "range"),
@@ -155,27 +161,27 @@ iplot <- function(x, y, HaTy) {
       layerId = paste(HaTy, paste("accuracy = ", acc)),
       prefix = "Habitat Type"
     ) %>%
-    addLayersControl(overlayGroups = c("RGB Composite", HaTy))
+    leaflet::addLayersControl(overlayGroups = c("RGB Composite", HaTy))
 
   if (.Platform$OS.type == "unix") {
-    saveWidget(mv, paste(outPath, 'leaflet.html', sep = ""))
+    htmlwidgets::saveWidget(mv, paste(outPath, 'leaflet.html', sep = ""))
     cat(
       "<style>.leaflet-container {cursor: crosshair !important;}</style>",
       file = paste(outPath, 'leaflet.html', sep = ""),
       append = TRUE
     )
-    browseURL(paste(outPath, 'leaflet.html', sep =
-                      ""), browser = "firefox")
+    utils::browseURL(paste(outPath, 'leaflet.html', sep =
+                             ""), browser = "firefox")
   } else {
-    saveWidget(mv,
-               selfcontained = FALSE,
-               paste(outPath, 'leaflet.html', sep = ""))
+    htmlwidgets::saveWidget(mv,
+                            selfcontained = FALSE,
+                            paste(outPath, 'leaflet.html', sep = ""))
     cat(
       "<style>.leaflet-container {cursor: crosshair !important;}</style>",
       file = paste(outPath, 'leaflet.html', sep = ""),
       append = TRUE
     )
-    browseURL(paste(outPath, 'leaflet.html', sep = ""))
+    utils::browseURL(paste(outPath, 'leaflet.html', sep = ""))
   }
   #cat("<style>.leaflet-clickable {cursor: crosshair !important;}</style>",
   #    file = "leaflet.html",

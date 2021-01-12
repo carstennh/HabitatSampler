@@ -47,8 +47,8 @@ sample_nb <- function(raster,
   ###velox
   rID = raster[[1]]
   rID[] = 1:(nrow(rID) * ncol(rID))
-  r = stack(rID, raster)
-  ras.vx <- velox(r)
+  r = raster::stack(rID, raster)
+  ras.vx <- velox::velox(r)
   ###
   l <- 1        ###6. opt=260
   model1 <- 1
@@ -65,8 +65,7 @@ sample_nb <- function(raster,
     sample_size <- r
     max_samples_per_class <- sample_size * 5
     if (init.seed == "sample") {
-      seed2 <-
-        sample(c(1:1000000), size = nb_mean, replace = F)
+      seed2 <- sample(c(1:1000000), size = nb_mean, replace = F)
     } else {
       seed2 <- init.seed
     }
@@ -76,9 +75,7 @@ sample_nb <- function(raster,
     dif <- matrix(NA, nrow = nb_mean, ncol = nrow(reference))
     channel <- matrix(NA, nrow = nb_mean, ncol = nrow(reference))
     switch <- matrix(NA, nrow = nb_mean, ncol = nrow(reference))
-    pb <- txtProgressBar(min = 1,
-                         max = nb_mean,
-                         style = 3)
+    pb <- utils::txtProgressBar(min = 1, max = nb_mean, style = 3)
 
     for (k in 1:nb_mean) {
       for (j in 1:n) {
@@ -87,13 +84,12 @@ sample_nb <- function(raster,
           classes <- as.factor(c(1, 1))
           if (sample_type == "random") {
             set.seed(seed2[k])
-            pbt <- sampleRandom(raster, size = sample_size, sp = T)
+            pbt <- raster::sampleRandom(raster, size = sample_size, sp = T)
           }
           if (sample_type == "regular") {
-            pbt <- sampleRegular(raster, size = sample_size, sp = T)
+            pbt <- raster::sampleRegular(raster, size = sample_size, sp = T)
           }
-          pbt <- point.in.poly(pbt, area)[, 1:n_channel]
-
+          pbt <- spatialEco::point.in.poly(pbt, area)[, 1:n_channel]
           f <- which(is.na(pbt@data[1]))
           if (length(f) != 0) {
             pbt <- pbt[-f,]
@@ -109,9 +105,10 @@ sample_nb <- function(raster,
         }
         ########################################################################
         if (model == "rf") {
-          model1 <- randomForest(as.factor(classes) ~ .,
-                                 data = data,
-                                 mtry = mtry)
+          model1 <-
+            randomForest::randomForest(as.factor(classes) ~ .,
+                                       data = data,
+                                       mtry = mtry)
           if (is.na(mean(model1$err.rate[, 1])) == TRUE) {
             break
           }
@@ -119,11 +116,8 @@ sample_nb <- function(raster,
         }
         ###
         if (model == "svm") {
-          model1 <- svm(as.factor(classes) ~ ., data = data)
-          co <-
-            length(which(
-              as.numeric(as.character(model1$fitted)) - as.numeric(as.character(classes)) == 0
-            ))
+          model1 <- e1071::svm(as.factor(classes) ~ ., data = data)
+          co <- length(which(as.numeric(as.character(model1$fitted)) - as.numeric(as.character(classes)) == 0))
           if (co == 0) {
             break
           }
@@ -132,8 +126,7 @@ sample_nb <- function(raster,
 
         #if ( j > 1) {if (oobe[j,k] < 0.02 || abs(oobe[(j-1),k]-oobe[j,k]) <= 0.011 )
         if (j > 1) {
-          if (oobe[j, k] < 0.02)
-          {
+          if (oobe[j, k] < 0.02) {
             models[[k]] <- model1
             points[[k]] <- rbind(pbtn1, pbtn2)
             break
@@ -145,8 +138,7 @@ sample_nb <- function(raster,
             break
           }
 
-          if (j == n &
-              oobe[j, k] >= 0.02) {
+          if (j == n & oobe[j, k] >= 0.02) {
             models[[k]] <- "NULL"
             points[[k]] <- "NULL"
             break
@@ -179,12 +171,12 @@ sample_nb <- function(raster,
           p1 <- pbt@coords[d1,]
           ##coordinaten
           pbtn1 <- as.data.frame(cbind(classes[d1], matrix(p1, ncol = 2)))
-          coordinates(pbtn1) <- c("V2", "V3")
-          proj4string(pbtn1) <- proj4string(pbt)
+          sp::coordinates(pbtn1) <- c("V2", "V3")
+          sp::proj4string(pbtn1) <- sp::proj4string(pbt)
 
-          poly <- gBuffer(spgeom = pbtn1,
-                          width = buffer,
-                          byid = TRUE)
+          poly <- rgeos::gBuffer(spgeom = pbtn1,
+                                 width = buffer,
+                                 byid = TRUE)
           test <- ras.vx$extract(sp = poly)
 
           for (i in 1:length(test)) {
@@ -199,13 +191,13 @@ sample_nb <- function(raster,
 
           for (i in 1:length(test)) {
             if (i == 1) {
-              co <- xyFromCell(raster, test[[i]][, 1])
+              co <- raster::xyFromCell(raster, test[[i]][, 1])
             } else {
-              co <- rbind(co, xyFromCell(raster, test[[i]][, 1]))
+              co <- rbind(co, raster::xyFromCell(raster, test[[i]][, 1]))
             }
           }
           pbtn1 <- as.data.frame(cbind(rep(1, nrow(co)), co))
-          coordinates(pbtn1) <- c("x", "y")
+          sp::coordinates(pbtn1) <- c("x", "y")
 
           test1 <- as.matrix(do.call(rbind, test)[,-1])
           if (ncol(test1) == 1) {
@@ -237,12 +229,12 @@ sample_nb <- function(raster,
           ###neue Samples aus richtig klassifizierten
           p2 <- pbt@coords[d2,]
           pbtn2 <- as.data.frame(cbind(classes[d2], matrix(p2, ncol = 2)))
-          coordinates(pbtn2) <- c("V2", "V3")
-          proj4string(pbtn2) <- proj4string(pbt)
+          sp::coordinates(pbtn2) <- c("V2", "V3")
+          sp::proj4string(pbtn2) <- sp::proj4string(pbt)
 
-          poly <- gBuffer(spgeom = pbtn2,
-                          width = buffer,
-                          byid = TRUE)
+          poly <- rgeos::gBuffer(spgeom = pbtn2,
+                                 width = buffer,
+                                 byid = TRUE)
           test <- ras.vx$extract(sp = poly)
 
           for (i in 1:length(test)) {
@@ -257,16 +249,15 @@ sample_nb <- function(raster,
 
           for (i in 1:length(test)) {
             if (i == 1) {
-              co <- xyFromCell(raster, test[[i]][, 1])
+              co <- raster::xyFromCell(raster, test[[i]][, 1])
             } else {
-              co <- rbind(co, xyFromCell(raster, test[[i]][, 1]))
+              co <- rbind(co, raster::xyFromCell(raster, test[[i]][, 1]))
             }
           }
           pbtn2 <- as.data.frame(cbind(rep(2, nrow(co)), co))
-          coordinates(pbtn2) <- c("x", "y")
+          sp::coordinates(pbtn2) <- c("x", "y")
 
-          test2 <-
-            as.matrix(do.call(rbind, test)[,-1])
+          test2 <- as.matrix(do.call(rbind, test)[,-1])
           if (ncol(test2) == 1) {
             test2 <- t(test2)
           }
@@ -313,13 +304,16 @@ sample_nb <- function(raster,
           test2 <- test2[dr,]
         }
         ########################################################################
-        data <- as.data.frame(cbind(append(pbtn1@data$V1, pbtn2@data$V1),
-                                    rbind(test1, test2))) ##data
+        data <-
+          as.data.frame(cbind(
+            append(pbtn1@data$V1, pbtn2@data$V1),
+            rbind(test1, test2)
+          )) ##data
         names(data)[1] <- "classes"
         classes <- data$classes
         pbt <- rbind(pbtn1, pbtn2)
       }
-      setTxtProgressBar(pb, k)
+      utils::setTxtProgressBar(pb, k)
     }
 
     if (length(models) == 0 |
@@ -334,18 +328,17 @@ sample_nb <- function(raster,
       rr = 3
       for (i in 1:length(models)) {
         if (i == 1) {
-          dummy <-
-            as.numeric(as.character(predict(models[[i]], newdata = reference)))
+          dummy <- as.numeric(
+            as.character(stats::predict(models[[i]], newdata = reference)))
           if (dummy[ref] != 2) {
-            dummy[dummy == 1] <-
-              3
+            dummy[dummy == 1] <- 3
             dummy[dummy == 2] <- 1
             dummy[dummy == 3] <- 2
             switch[i, jj] <- i
           }
         } else {
-          dummy2 <-
-            as.numeric(as.character(predict(models[[i]], newdata = reference)))
+          dummy2 <- as.numeric(
+            as.character(stats::predict(models[[i]], newdata = reference)))
 
           if (dummy2[ref] != 2) {
             dummy2[dummy2 == 1] <- 3
@@ -382,10 +375,8 @@ sample_nb <- function(raster,
     }
     acc <<- (round(m[l] ^ 2, 2) / 0.25)
 
-    print(paste("class=", index, "  difference=",
-                (round(m[l] ^ 2, 2) / 0.25),
+    print(paste("class=", index, "  difference=", (round(m[l] ^ 2, 2) / 0.25),
                 sep = ""))
-
     l <- l + 1
   }
   close(pb)
@@ -404,26 +395,27 @@ sample_nb <- function(raster,
   j <- 1
   for (i in ch) {
     if (j == 1) {
-      result1 <- predict(object = raster, model = models[[i]])
+      result1 <- raster::predict(object = raster, model = models[[i]])
 
       if (is.na(switch[i]) == F) {
         result1 <-
-          reclassify(result1, rbind(c(0.5, 1.5, 2), c(1.6, 2.5, 1)))
+          raster::reclassify(result1, rbind(c(0.5, 1.5, 2), c(1.6, 2.5, 1)))
       }
     } else {
-      result1 <- stack(result1, predict(object = raster, model = models[[i]]))
+      result1 <-
+        raster::stack( result1, raster::predict(object = raster, model = models[[i]]))
 
       if (is.na(switch[i]) == F) {
         result1[[j]] <-
-          reclassify(result1[[j]], rbind(c(0.5, 1.5, 2), c(1.6, 2.5, 1)))
+          raster::reclassify(result1[[j]], rbind(c(0.5, 1.5, 2), c(1.6, 2.5, 1)))
       }
     }
     print(j)
     j <- j + 1
   }
   ###
-  dummy <- brick(result1)
-  dummy <- calc(dummy, fun = sum)
+  dummy <- raster::brick(result1)
+  dummy <- raster::calc(dummy, fun = sum)
   layer[[1]] <- dummy
 
   setClass(
