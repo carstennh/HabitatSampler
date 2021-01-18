@@ -1,46 +1,102 @@
-# HaSa - HabitatSampler
-#
-# Copyright (C) 2020  Carsten Neumann (GFZ Potsdam, carsten.neumann@gfz-potsdam.de)
-#
-# This software was developed within the context of the project
-# NaTec - KRH (www.heather-conservation-technology.com) funded
-# by the German Federal Ministry of Education and Research BMBF
-# (grant number: 01 LC 1602A).
-# The BMBF supports this project as research for sustainable development (FONA); www.fona.de.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-# details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program.  If not, see <http://www.gnu.org/licenses/>.
+#' Perform Habitat Sampling and Probability Mapping
+#'
+#'This is the main function that performs everything: specify the input imagery, select model type, initiate sampling and model building, generates interactive maps and produce final probability raster output
+#'
+#' @param in.raster satellite time series stack (rasterBrickObject) or just any type of image (*rasterObject)
+#' @param init.samples starting number of spatial locations
+#' @param sample_type distribution of spatial locations c("random","regular")
+#' @param nb_models number of models (independent classifiers) to collect
+#' @param nb_it number of iterations for model accuracy
+#' @param buffer distance (in m) for new sample collection around initial samples (depends on pixel size)
+#' @param reference reference spectra either SpatialPointsDataFrame (shape file) or data.frame with lines = classes, column = predictors]
+#' @param model which machine learning classifier to use c("rf", "svm") for random forest or suppurt vector machine implementation
+#' @param mtry number of predictor used at random forest splitting nodes (mtry << n predictors)
+#' @param last only true for one class classifier c("FALSE", TRUE")
+#' @param seed set seed for reproducable results
+#' @param init.seed "sample" for new or use run1@seeds to reproduce previous steps
+#' @param outPath output path for saving results
+#' @param step at which step should the procedure start, e.g. use step = 2 if the first habitat is already extracted
+#' @param  classNames character vector with class names in the order of reference spectra
+#' @param n_classes total number of classes (habitat types) to be separated
+#' @param multiTest number of test runs to compare different probability outputs
+#' @param RGB rgb channel numbers for image plot
+#'
+#' @return 4 files per step:
+#' 1) Habitat type probability map as geocoded *.kml layer and *.tif raster files and  *.png image output
+#' 2) A Habitat object consisting of 7 slots: \cr
+#' run1@models - list of selcted classifiers \cr
+#' run1@ref_samples - list of SpatialPointsDataFrames with same length as run1@models holding reference labels [1,2] for each selected model \cr
+#' run1@switch - vector of lenght run1@models indicating if target class equals 2, if not NA the labels need to be switched \cr
+#' run1@layer - raster map of habitat type probability \cr
+#' run1@mod_all - list of all classifiers (equals nb_models) \cr
+#' run1@class_ind - vector of predictive distance measure for all habitats \cr
+#' run1@seeds - vector of seeds for random sampling \cr
+#' all files are saved with step number, the *.tif file is additionally saved with class names
+#'
+#' @examples
+#' ###################
+#' library(HaSa)
+#' raster::plotRGB(Sentinel_Stack_2018, r = 19, g = 20, b = 21, stretch = "lin", axes = T)
+#' sp::plot(Example_Reference_Points, pch = 21, bg = "red", col = "yellow", cex = 1.9, lwd = 2.5, add = T)
+#' #specify a valid output path e.g.  "C:/Users/.../"
+#' multi_Class_Sampling(in.raster = Sentinel_Stack_2018, init.samples = 30, sample_type = "regular", nb_models = 200, nb_it = 10, buffer = 15,
+#' reference = Example_Reference_Points, model = "rf", mtry = 10, last = F, seed = 3, init.seed = "sample", outPath="C:/User/", step = 1,
+#' classNames = c("deciduous", "coniferous", "heath_young", "heath_old", "heath_shrub", "bare_ground", "xeric_grass"), n_classes = 7,
+#' multiTest = 1, RGB = c(19, 20, 21))
+#' ###################
+#' for threshold evaluation an interactive map is plotted in the web browser
+#'
+#' next steps start automatically, after command line input of:
+#' 1) number of the apropriate map if multiTest > 1
+#' 2) probability threshold for habitat type extraction
+#' 3) decision to sample again y/n
+#' 4) adjust starting number of samples and number of models
+#'
+#'
+#'
+#' if convergence fails / no models can be selected / init.samples are to little / or another error occurs, restart next step with:
+#' in.raster = out.raster
+#' reference = out.reference
+#' step = specify next step number
+#' classNames = out.names
+#'
+#' @export
 
 ################################################################################
 multi_Class_Sampling <- function(in.raster,
-                                 init.samples,
-                                 sample_type,
-                                 nb_models,
-                                 nb_it,
+                                 init.samples = 30,
+                                 sample_type = "regular",
+                                 nb_models = 200,
+                                 nb_it = 10,
                                  buffer,
                                  reference,
-                                 model,
-                                 area,
-                                 mtry,
-                                 last,
-                                 seed,
-                                 init.seed,
+                                 model = "rf",
+                                 mtry = 10,
+                                 last = F,
+                                 seed = 3,
+                                 init.seed = "sample",
                                  outPath,
-                                 step,
+                                 step = 1,
                                  classNames,
                                  n_classes,
-                                 multiTest) {
-  source(paste(inPath, "inner_procedure.r", sep = ""))
+                                 multiTest = 1,
+                                 RGB = c(19, 20, 21)) {
+  ###first steps: data preparation
+  if (class(reference) == "SpatialPointsDataFrame") {
+    reference <- as.data.frame(raster::extract(in.raster, reference))
+  }
+
+  area <- as(raster::extent(in.raster), 'SpatialPolygons')
+  area <- sp::SpatialPolygonsDataFrame(area, data.frame(ID = 1:length(area)))
+  sp::proj4string(area) <- sp::proj4string(in.raster)
+
+  col <- colorRampPalette(c("lightgrey",
+                            "orange",
+                            "yellow",
+                            "limegreen",
+                            "forestgreen"))
+
+  ##############################################################################
   r <- n_classes
   if (names(in.raster)[1] != colnames(reference)[1]) {
     colnames(reference) <- names(in.raster)
@@ -70,8 +126,9 @@ multi_Class_Sampling <- function(in.raster,
       test <- list()
       maFo <- list()
       new.names <- list()
+      new.acc <- list()
       decision = "0"
-      ########################################################################
+      ##########################################################################
 
       while (decision == "0") {
         for (rs in 1:multiTest) {
@@ -91,10 +148,15 @@ multi_Class_Sampling <- function(in.raster,
             seed = seed,
             init.seed = init.seed
           )
+
+          index <- maFo_rf$index
+          acc <- maFo_rf$acc
+          maFo_rf <- maFo_rf$obj
           ########################
           maFo[[rs]] <- maFo_rf
           test[[rs]] <- maFo_rf@layer[[1]]
           new.names[[rs]] <- index
+          new.acc[[rs]] <- acc
           if (rs == multiTest) {
             par(mar = c(2, 2, 2, 3), mfrow = n2mfrow(multiTest))
             for (rr in 1:length(test)) {
@@ -102,8 +164,7 @@ multi_Class_Sampling <- function(in.raster,
                 test[[rr]],
                 col = col(200),
                 main = "",
-                legend.shrink = 1
-              )
+                legend.shrink = 1)
               mtext(side = 3,
                     paste(rr, classNames[new.names[[rr]]], sep = " "),
                     font = 2)
@@ -115,8 +176,8 @@ multi_Class_Sampling <- function(in.raster,
       }
       maFo_rf <- maFo[[as.numeric(decision)]]
       index <- new.names[[as.numeric(decision)]]
-      ########################################################################
-
+      acc <- new.acc[[as.numeric(decision)]]
+      ##########################################################################
     } else{
       ########################
       maFo_rf <- sample_nb(
@@ -134,11 +195,24 @@ multi_Class_Sampling <- function(in.raster,
         seed = seed,
         init.seed = init.seed
       )
+
+      index <- maFo_rf$index
+      acc <- maFo_rf$acc
+      maFo_rf <- maFo_rf$obj
       ########################
     }
 
     dummy <- maFo_rf@layer[[1]]
-    iplot(x = dummy, y = a1, HaTy = classNames[index])
+    iplot(
+      x = dummy,
+      y = in.raster,
+      HaTy = classNames[index],
+      r = RGB[1],
+      g = RGB[2],
+      b = RGB[3],
+      acc = acc,
+      outPath = outPath
+    )
 
     decision <-
       readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
@@ -150,8 +224,7 @@ multi_Class_Sampling <- function(in.raster,
         readline("Adjust init.samples/nb.models or auto [../.. or 0]:  ")
       if (decision2 != "0") {
         sample2 <- as.numeric(strsplit(decision2, split = "/")[[1]][1])
-        models2 <-
-          as.numeric(strsplit(decision2, split = "/")[[1]][2])
+        models2 <- as.numeric(strsplit(decision2, split = "/")[[1]][2])
       } else {
         sample2 <- sample2 + 50
         models2 <- models2 + 15
@@ -175,10 +248,23 @@ multi_Class_Sampling <- function(in.raster,
         seed = seed,
         init.seed = init.seed
       )
+
+      index <- maFo_rf$index
+      acc <- maFo_rf$acc
+      maFo_rf <- maFo_rf$obj
       ########################
 
       dummy <- maFo_rf@layer[[1]]
-      iplot(x = dummy, y = a1, HaTy = classNames[index])
+      iplot(
+        x = dummy,
+        y = in.raster,
+        HaTy = classNames[index],
+        r = RGB[1],
+        g = RGB[2],
+        b = RGB[3],
+        acc = acc,
+        outPath = outPath
+      )
 
       decision <-
         readline("Threshold for Habitat Extraction or Sample Again [../0]:  ")
@@ -191,15 +277,28 @@ multi_Class_Sampling <- function(in.raster,
       ni <- i
     }
     save(run1, file = paste(outPath, paste("Run", ni, sep = ""), sep = ""))
-    writeRaster(dummy,
-                filename = paste(outPath, paste(
-                  "step_", ni, paste("_", classNames[index], sep = ""), ".tif", sep = ""
-                ), sep = ""),
-                format = "GTiff")
-    #savePlot("step_1.png",type="png")
-    kml <-
-      projectRaster(dummy, crs = "+proj=longlat +datum=WGS84", method = 'ngb')
-    KML(kml, paste(outPath, paste("step_", ni, sep = ""), sep = ""))
+    ###rgdal version issue
+    not_good_workaround <- comment(dummy@crs)
+    comment(dummy@crs) <- ""
+    ###
+    raster::writeRaster(
+      dummy,
+      filename = paste(outPath,
+                       paste("step_",
+                             ni,
+                             paste("_", classNames[index], sep = ""),
+                             ".tif",
+                             sep = ""),
+                       sep = ""),
+      format = "GTiff")
+
+    ###rgdal version issue
+    comment(dummy@crs) <- not_good_workaround
+    ###
+    kml <- raster::projectRaster(dummy,
+                                 crs = "+proj=longlat +datum=WGS84",
+                                 method = 'ngb')
+    raster::KML(kml, paste(outPath, paste("step_", ni, sep = ""), sep = ""))
 
     thres <- as.numeric(decision)
     dummy <- maFo_rf@layer[[1]]
@@ -225,8 +324,8 @@ multi_Class_Sampling <- function(in.raster,
       save(threshold,
            file = paste(outPath,
                         paste("threshold_step_", ni, sep = ""),
-                        sep  =  ""))
-    } else{
+                        sep = ""))
+    } else {
       threshold <- append(threshold, thres)
       save(threshold,
            file = paste(outPath,
@@ -234,8 +333,7 @@ multi_Class_Sampling <- function(in.raster,
                         sep = ""))
     }
 
-    decision2 <-
-      readline("Adjust init.samples/nb.models or auto [../.. or 0]:  ")
+    decision2 <- readline("Adjust init.samples/nb.models or auto [../.. or 0]:  ")
 
     if (decision2 != "0") {
       init.samples <- as.numeric(strsplit(decision2, split = "/")[[1]][1])

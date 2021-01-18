@@ -23,7 +23,7 @@
 
 ################################################################################
 ################################################################################
-iplot <- function(x, y, HaTy) {
+iplot <- function(x, y, HaTy, r, g, b, acc, outPath) {
   #x=layerInfo, y=RGB Image
   ##############################################################################
   if (exists("color") == F) {
@@ -63,9 +63,6 @@ iplot <- function(x, y, HaTy) {
     }
   }
 
-  r = r
-  g = g
-  b = b
   maxpixels = 10000000
   colNA = "#FFFAFA99"
   bgalpha = 0
@@ -127,41 +124,50 @@ iplot <- function(x, y, HaTy) {
 
   ##############################################################################
   ##[2] Create Leaflet Html output for Webbrowser
-  mv <- leaflet::leaflet() %>%
-    #addTiles(urlTemplate ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>%
-    leaflet::addProviderTiles("CartoDB.PositronNoLabels") %>%
-    leaflet::addRasterImage(
-      x,
-      colors = pal,
-      opacity = 1,
-      project = TRUE,
-      method = "ngb",
-      group = HaTy,
-      layerId = paste(HaTy, paste("accuracy = ", acc))
-    ) %>%
-    leaflet::addRasterImage(
-      rr,
-      colors = palo,
-      opacity = 1,
-      project = TRUE,
-      method = "ngb",
-      group = "RGB Composite",
-      layerId = "RGB Composite"
-    ) %>%
-    leaflet::addLegend(
-      "bottomright",
-      pal = pal,
-      values = cellStats(x, "range"),
-      title = "Habitat Type Probability",
-      opacity = 1
-    ) %>%
-    leafem::addImageQuery(
-      x,
-      project = TRUE,
-      layerId = paste(HaTy, paste("accuracy = ", acc)),
-      prefix = "Habitat Type"
-    ) %>%
-    leaflet::addLayersControl(overlayGroups = c("RGB Composite", HaTy))
+  mv <- leaflet::leaflet()
+  #addTiles(urlTemplate ='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>%
+  mv <- leaflet::addProviderTiles(map = mv, "CartoDB.PositronNoLabels")
+
+  mv <- leaflet::addRasterImage(
+    map = mv,
+    rr,
+    colors = palo,
+    opacity = 1,
+    project = TRUE,
+    method = "ngb",
+    group = "RGB Composite",
+    layerId = "RGB Composite"
+  )
+
+  mv <- leaflet::addRasterImage(
+    map = mv,
+    x,
+    colors = pal,
+    opacity = 1,
+    project = TRUE,
+    method = "ngb",
+    group = HaTy,
+    layerId = HaTy
+  )
+
+  mv <- leafem::addImageQuery(
+    map = mv,
+    x,
+    project = TRUE,
+    layerId = HaTy,
+    prefix = "Habitat Type"
+  )
+
+  mv <- leaflet::addLegend(
+    map = mv,
+    "bottomright",
+    pal = pal,
+    values = raster::cellStats(x, "range"),
+    title = "Habitat Type Probability",
+    opacity = 1
+  )
+  mv <- leaflet::addLayersControl(map = mv,
+                                  overlayGroups = c("RGB Composite", HaTy))
 
   if (.Platform$OS.type == "unix") {
     htmlwidgets::saveWidget(mv, paste(outPath, 'leaflet.html', sep = ""))

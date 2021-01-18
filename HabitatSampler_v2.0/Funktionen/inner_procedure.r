@@ -35,14 +35,7 @@ sample_nb <- function(raster,
                       last,
                       seed,
                       init.seed) {
-  ### 1. Maske start=30 optimal = 100
-  ### 2.Maske start=40 optimal=110
-  ### 3. Maske start=40 optimal=70
-  ### 4. Maske start=40 optimal=140
-  ### 5. opt=70
-  require(spatialEco)
-  require(randomForest)
-  require(e1071)
+  ###
   n_channel <- length(names(raster))
   ###velox
   rID = raster[[1]]
@@ -147,7 +140,7 @@ sample_nb <- function(raster,
         model_pre <- model1
         pbtn1_pre <- pbtn1
         pbtn2_pre <- pbtn2
-        oobe <<- oobe
+        oobe <- oobe
         ########################################################################
         if (model == "rf") {
           correct <-
@@ -167,9 +160,8 @@ sample_nb <- function(raster,
         } else {
           d1 <- correct[which(classes[correct] == 1)]
 
-          ###neue Samples aus richtig klassifizierten
+          ###generate new samples from only correctly classified samples [label 1]
           p1 <- pbt@coords[d1,]
-          ##coordinaten
           pbtn1 <- as.data.frame(cbind(classes[d1], matrix(p1, ncol = 2)))
           sp::coordinates(pbtn1) <- c("V2", "V3")
           sp::proj4string(pbtn1) <- sp::proj4string(pbt)
@@ -226,7 +218,7 @@ sample_nb <- function(raster,
         } else {
           d2 <- correct[which(classes[correct] == 2)]
 
-          ###neue Samples aus richtig klassifizierten
+          ###generate new samples from only correctly classified samples [label 2]
           p2 <- pbt@coords[d2,]
           pbtn2 <- as.data.frame(cbind(classes[d2], matrix(p2, ncol = 2)))
           sp::coordinates(pbtn2) <- c("V2", "V3")
@@ -366,14 +358,14 @@ sample_nb <- function(raster,
       }
       m[l] <- max(dif[2,], na.rm = T)
     }
-    index <<- which.max(dif[2,])
+    index <- which.max(dif[2,])
     ch <- as.numeric(na.omit(channel[, index]))
     if (length(ch) == 0) {
       stop(
         "No optimal classifier - would you be so kind to adjust init.samples & nb_models, please"
       )
     }
-    acc <<- (round(m[l] ^ 2, 2) / 0.25)
+    acc <- (round(m[l] ^ 2, 2) / 0.25)
 
     print(paste("class=", index, "  difference=", (round(m[l] ^ 2, 2) / 0.25),
                 sep = ""))
@@ -418,19 +410,7 @@ sample_nb <- function(raster,
   dummy <- raster::calc(dummy, fun = sum)
   layer[[1]] <- dummy
 
-  setClass(
-    "Habitat",
-    representation(
-      models = "list",
-      ref_samples = "list",
-      switch = "vector",
-      layer = "list",
-      mod_all = "list",
-      class_ind = "numeric",
-      seeds = "numeric"
-    )
-  )
-  new(
+  obj <- new(
     "Habitat",
     models = models,
     ref_samples = points,
@@ -440,4 +420,6 @@ sample_nb <- function(raster,
     class_ind = dif,
     seeds = seed2
   )
+  out <- list(index = index, acc = acc, obj = obj)
+  return(out)
 }
