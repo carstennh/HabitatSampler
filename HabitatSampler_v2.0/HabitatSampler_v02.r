@@ -40,6 +40,7 @@ source(paste(inPath,"clip.r",sep=""))
 source(paste(inPath,"outer_procedure.r",sep=""))
 source(paste(inPath,"plot_results.r",sep=""))
 source(paste(inPath,"plot_interactive.r",sep=""))
+source(paste(inPath,"Class_Habitat.r",sep=""))
 
 usePack("rgdal","raster","maptools","spatialEco","randomForest","e1071","devtools","installr","velox","rgeos","leaflet","htmlwidgets")
 rasterOptions(tmpdir="./RasterTmp/")
