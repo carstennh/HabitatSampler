@@ -80,7 +80,8 @@ multi_Class_Sampling <- function(in.raster,
                                  classNames,
                                  n_classes,
                                  multiTest = 1,
-                                 RGB = c(19, 20, 21)) {
+                                 RGB = c(19, 20, 21),
+                                 overwrite = TRUE) {
   ###first steps: data preparation
   if (class(reference) == "SpatialPointsDataFrame") {
     reference <- as.data.frame(raster::extract(in.raster, reference))
@@ -291,7 +292,8 @@ multi_Class_Sampling <- function(in.raster,
                              ".tif",
                              sep = ""),
                        sep = ""),
-      format = "GTiff")
+      format = "GTiff",
+      overwrite = overwrite)
 
     ###rgdal version issue
     comment(dummy@crs) <- not_good_workaround
@@ -299,7 +301,7 @@ multi_Class_Sampling <- function(in.raster,
     kml <- raster::projectRaster(dummy,
                                  crs = "+proj=longlat +datum=WGS84",
                                  method = 'ngb')
-    raster::KML(kml, paste(outPath, paste("step_", ni, sep = ""), sep = ""))
+    raster::KML(kml, paste(outPath, paste("step_", ni, sep = ""), sep = ""), overwrite = overwrite)
 
     thres <- as.numeric(decision)
     dummy <- maFo_rf@layer[[1]]
