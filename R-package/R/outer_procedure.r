@@ -86,6 +86,7 @@ multi_Class_Sampling <- function(in.raster,
     reference <- as.data.frame(raster::extract(in.raster, reference))
   }
 
+  input_raster <- in.raster
   area <- as(raster::extent(in.raster), 'SpatialPolygons')
   area <- sp::SpatialPolygonsDataFrame(area, data.frame(ID = 1:length(area)))
   sp::proj4string(area) <- sp::proj4string(in.raster)
@@ -205,7 +206,7 @@ multi_Class_Sampling <- function(in.raster,
     dummy <- maFo_rf@layer[[1]]
     iplot(
       x = dummy,
-      y = in.raster,
+      y = input_raster,
       HaTy = classNames[index],
       r = RGB[1],
       g = RGB[2],
@@ -257,7 +258,7 @@ multi_Class_Sampling <- function(in.raster,
       dummy <- maFo_rf@layer[[1]]
       iplot(
         x = dummy,
-        y = in.raster,
+        y = input_raster,
         HaTy = classNames[index],
         r = RGB[1],
         g = RGB[2],
@@ -323,7 +324,7 @@ multi_Class_Sampling <- function(in.raster,
       threshold  <- thres
       save(threshold,
            file = paste(outPath,
-                        paste("threshold_step_", ni, sep  = ""),
+                        paste("threshold_step_", ni, sep = ""),
                         sep = ""))
     } else {
       threshold <- append(threshold, thres)
