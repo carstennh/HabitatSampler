@@ -61,8 +61,6 @@
 #' classNames = out.names
 #'
 #' @export
-
-################################################################################
 multi_Class_Sampling <- function(in.raster,
                                  init.samples = 30,
                                  sample_type = "regular",
