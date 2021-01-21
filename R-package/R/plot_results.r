@@ -12,7 +12,7 @@
 #' 3) a raster map with delineated habitat types -> HabitatMap_final.tif
 #'
 #' @export
-plot_Results <- function(inPath, threshold, color = NULL) {
+plot_Results <- function(inPath, color = NULL) {
     ##3.a.1##
     setwd(inPath)
     files <- grep(list.files()[grep(list.files(), pattern = ".tif$")],
@@ -31,6 +31,7 @@ plot_Results <- function(inPath, threshold, color = NULL) {
         ni <- numberHabitats
     }
 
+    # loads the variable threshold
     load(paste("threshold_step_", ni, sep = ""))
     thres <- threshold
     class <- stack(files[1:length(files)], files[1])
