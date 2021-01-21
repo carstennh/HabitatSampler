@@ -81,8 +81,9 @@ With the clause `if multiTest > 1` the user will get multiple maps and will be a
 
 ## Executing
 
+
 ### Step 1
-A) An interactive map is plotted in a web browser (firefox for linux), containing:
+A) An interactive map is plotted in a web browser (e.g. firefox for linux), containing:
     a) background map \
     b) RGB image \
     c) selected habitat type map \
@@ -90,24 +91,22 @@ A) An interactive map is plotted in a web browser (firefox for linux), containin
     e) predictive distance
 
 B) The user has to decide to extract this habitat type on the basis of a threshold (B.1) or to sample again (B.2) \
-    B.1) enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type. The files are: \
+    B.1) enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type and we move **Step 2**. The files are: \
         a) HabitatSampler object (Run) - R Binary \
         b) probability map - *.kml, *.png, geocoded *.tif \
-        c) threshold list - R Binary d) leaflet interactive web interface - *.html \
-    B.2) after habitat extraction is done the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to next step          enter sample/model adjsutement (../..) or auto (0) in R console
-
-### Step 2 ... 
-
-proceed with A)
-    B.2) enter 0 in R console, the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to new sampling enter sample/model adjustement (../..) or auto (0) in R console \
-    B.2) proceed with A until decision (B.1) has made
+        c) threshold list - R Binary \
+        d) leaflet interactive web interface - *.html \
+    After habitat extraction is done the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to next step                
+    enter sample/model adjsutement (../..) or auto (0) in R console \
+    B.2) enter 0 in R console, the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to new sampling enter
+    sample/model adjustement (../..) or auto (0) in R console. Proceed with A until decision (B.1) has made.
     
-### Step 2 ... 
+### Step 2...N
 
-proceed with A)
+Repeat **Step 1** for a new habitat type until **N** habitat types.
+    
+**Note**: In case it is not possible to converge, i.e., convergence fails, due to the fact either no `models` can be selected or `init.samples` are not enough or another error occurs, it is possible to restart by re-running again the `multi_Class_Sampling` function with the following new argument's values:
 
-In case it is not possible to converge, i.e., convergence fails, due to the fact either no `models` can be selected or `init.samples` are not enough or another error occurs, the restart next step is possible with:
-    2.b.1) Execute R function `multi_Class_Sampling` with the following parameters:
     ```R
         in.raster       # out.raster
         init.samples    # printed in console
@@ -121,6 +120,7 @@ In case it is not possible to converge, i.e., convergence fails, due to the fact
 
 3) generate habitat type map and summary statistics \
     3.a.1) Call function `plot_results` with the following arguments:
+    
     ```R
         inPath         # input files (*.tif), equals outPath 
         color          # vector of plot colors, one for each habitat type
