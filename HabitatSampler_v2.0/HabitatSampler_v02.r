@@ -35,13 +35,18 @@ dataPath<-"./Data/"
 outPath<-paste(wd,"Data/Results/",sep="")
 
 ##0.3##
-source(paste(inPath,"install_packages.r",sep=""))
-source(paste(inPath,"clip.r",sep=""))
-source(paste(inPath,"outer_procedure.r",sep=""))
-source(paste(inPath,"plot_results.r",sep=""))
-source(paste(inPath,"plot_interactive.r",sep=""))
-
-usePack("rgdal","raster","maptools","spatialEco","randomForest","e1071","devtools","installr","velox","rgeos","leaflet","htmlwidgets")
+install.packages("https://cran.r-project.org/src/contrib/Archive/BH/BH_1.69.0-1.tar.gz", repos=NULL, type="source")
+remotes::install_git(
+    "https://github.com/carstennh/HabitatSampler.git",
+    ref = "master",
+    subdir = "R-package",
+    dependencies = NA,
+    upgrade=FALSE,
+    build = TRUE,
+    build_manual = TRUE,
+    build_vignettes = TRUE
+)
+library(HaSa)
 rasterOptions(tmpdir="./RasterTmp/")
 ########################################################################################
 ##1)##
@@ -84,10 +89,10 @@ classNames<-c("deciduous","coniferous","heather_young","heather_old","heather_sh
 
 ##2.a.1##
 multi_Class_Sampling(in.raster=a1,init.samples=50,sample_type="regular",nb_models=200,nb_it=10,buffer=15,reference=ref,model="rf",area=p,mtry=10,last=F,
-seed=3,init.seed="sample", outPath=outPath,step=1,classNames=classNames,n_classes=7,multiTest=1)
+seed=3,init.seed="sample", outPath=outPath,step=1,classNames=classNames,n_classes=7,multiTest=1,RGB=c(19,20,21),overwrite=TRUE)
 
 ##2.b.1##
-multi_Class_Sampling(in.raster=out.raster,init.samples=50,sample_type="regular",nb_models=300,nb_it=10,buffer=15,reference=out.reference,model="rf",area=p,mtry=10,last=F,seed=3,init.seed="sample", outPath=outPath,step=6,classNames=out.names,n_classes=7,multiTest=1)
+multi_Class_Sampling(in.raster=out.raster,init.samples=50,sample_type="regular",nb_models=300,nb_it=10,buffer=15,reference=out.reference,model="rf",area=p,mtry=10,last=F,seed=3,init.seed="sample", outPath=outPath,step=6,classNames=out.names,n_classes=7,multiTest=1,RGB=c(19,20,21),overwrite=TRUE)
 
 ########################################################################################
 ##3)##

@@ -4,7 +4,7 @@
 0) Load all required packages and functions
     0.1 set working directories (use: '/')
     0.2 set data input/output paths (use: '/')
-    0.3 automatic load and/or install libraries
+    0.3 install HaSa library and its dependencies
  
 1) Prepare Input Data
     1.a.1) Satellite time series stack clipped to study area (specify file name)
@@ -41,6 +41,8 @@
                                                   classNames                      vector with class names in the order of reference spectra
                                                   n_classes                          total number of classes (habitat types) to be separated
                                                   multiTest                          number of test runs to compare different probability outputs   
+                                                  RGB                               pallet colors for the interactive plots
+                                                  overwrite                 overwrite the KML and raster files from previous runs
 
  remark 1) the results from previous steps are reproducable when using the same seed value and int.seed=Run@seeds (e.g. Run02@seeds)
                  in consequence, init.sample for regular sampling determines an invariant sample distribution, 

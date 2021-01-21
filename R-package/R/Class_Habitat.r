@@ -1,3 +1,9 @@
+#' Habitat Class
+#'
+#' Creates a Habitat Class
+#'
+#' @return a Habitat Class
+#' @export
 Habitat <- setClass(
   "Habitat",
   slots = c(

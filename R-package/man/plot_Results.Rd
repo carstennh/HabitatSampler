@@ -12,7 +12,7 @@ plot_Results(inPath, color = NULL)
 \item{color}{colors for different habitat types, have to be a color vector of length number of habitat types, there is a default colorRamp provided}
 }
 \value{
-two plot windows
+two plot windows and a raster file (GeoTiff)
 \enumerate{
 \item raster map of habitat type distribution
 \item pie chart of habitat type proportions

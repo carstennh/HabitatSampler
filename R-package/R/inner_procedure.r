@@ -1,27 +1,34 @@
-# HaSa - HabitatSampler
-#
-# Copyright (C) 2020  Carsten Neumann (GFZ Potsdam, carsten.neumann@gfz-potsdam.de)
-#
-# This software was developed within the context of the project
-# NaTec - KRH (www.heather-conservation-technology.com) funded
-# by the German Federal Ministry of Education and Research BMBF
-# (grant number: 01 LC 1602A).
-# The BMBF supports this project as research for sustainable development (FONA); www.fona.de.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-# details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-################################################################################
+#' Perform Habitat Sampling and Probability Mapping
+#'
+#'This is the function that performs: initiate sampling and model building
+#'
+#' @param raster satellite time series stack (rasterBrickObject) or just any type of image (*rasterObject)
+#' @param nb_samples number of spatial locations
+#' @param sample_type distribution of spatial locations c("random","regular")
+#' @param nb_models number of models (independent classifiers) to collect
+#' @param nb_mean number of iterations for model accuracy
+#' @param buffer distance (in m) for new sample collection around initial samples (depends on pixel size)
+#' @param reference reference spectra either SpatialPointsDataFrame (shape file) or data.frame with lines = classes, column = predictors]
+#' @param model which machine learning classifier to use c("rf", "svm") for random forest or suppurt vector machine implementation
+#' @param area extent where the the classification is happening
+#' @param mtry number of predictor used at random forest splitting nodes (mtry << n predictors)
+#' @param last only true for one class classifier c("FALSE", TRUE")
+#' @param seed set seed for reproducable results
+#' @param init.seed "sample" for new or use run1@seeds to reproduce previous steps
+#'
+#' @return a list with 3 elements:
+#' 1) An index
+#' 2) Accuracy vector
+#' 3) A vector with a Habitat objects, each consisting of 7 slots: \cr
+#' run1@models - list of selected classifiers \cr
+#' run1@ref_samples - list of SpatialPointsDataFrames with same length as run1@models holding reference labels [1,2] for each selected model \cr
+#' run1@switch - vector of length run1@models indicating if target class equals 2, if not NA the labels need to be switched \cr
+#' run1@layer - raster map of habitat type probability \cr
+#' run1@mod_all - list of all classifiers (equals nb_models) \cr
+#' run1@class_ind - vector of predictive distance measure for all habitats \cr
+#' run1@seeds - vector of seeds for random sampling \cr
+#' all files are saved with step number, the *.tif file is additionally saved with class names
+#' @keywords internal
 sample_nb <- function(raster,
                       nb_samples,
                       sample_type,
