@@ -3,7 +3,6 @@
 #'A quick wrapper to produce a habitat type map and habitat type proportions in a pie chart.
 #'
 #' @param inPath file path (character) for results of habitat type sampling and probability mapping (same as outPath from function multi_Class_Sampling)
-#' @param threshold probability threshold provided by the user.
 #' @param color colors for different habitat types, have to be a color vector of length number of habitat types, there is a default colorRamp provided
 #'
 #' @return two plot windows and a raster file (GeoTiff)

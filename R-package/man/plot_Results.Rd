@@ -4,17 +4,15 @@
 \alias{plot_Results}
 \title{Plot Habitat Types}
 \usage{
-plot_Results(inPath, threshold, color = NULL)
+plot_Results(inPath, color = NULL)
 }
 \arguments{
 \item{inPath}{file path (character) for results of habitat type sampling and probability mapping (same as outPath from function multi_Class_Sampling)}
 
-\item{threshold}{probability threshold provided by the user.}
-
 \item{color}{colors for different habitat types, have to be a color vector of length number of habitat types, there is a default colorRamp provided}
 }
 \value{
-three plot windows
+two plot windows and a raster file (GeoTiff)
 \enumerate{
 \item raster map of habitat type distribution
 \item pie chart of habitat type proportions
