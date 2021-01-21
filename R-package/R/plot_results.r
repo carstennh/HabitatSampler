@@ -51,12 +51,12 @@ plot_Results <- function(inPath, threshold, color = NULL) {
     ###Classification
     for (i in 1:(length(files) + 1)) {
         if (i == (length(files) + 1)) {
-            dummy <- raster(files[(i - 1)])
+            dummy <- raster::raster(files[(i - 1)])
             dummy[dummy < thres[(i - 1)]] <- i
             dummy[dummy >= thres[(i - 1)]] <- NA
             class[[i]] <- dummy
         } else {
-            dummy <- raster(files[i])
+            dummy <- raster::raster(files[i])
             dummy[dummy < thres[i]] <- NA
             dummy[dummy >= thres[i]] <- i
             class[[i]] <- dummy
@@ -68,9 +68,9 @@ plot_Results <- function(inPath, threshold, color = NULL) {
     brk = seq(0.5, numberHabitats + 1.5, 1)
 
     if (.Platform$OS.type == "unix") {
-        x11()
+        grDevices::x11()
     } else {
-         windows()
+        grDevices::windows()
     }
 
     if (length(color) == 0) {
@@ -88,7 +88,7 @@ plot_Results <- function(inPath, threshold, color = NULL) {
             legend.shrink = 1
         )
     }
-    writeRaster(
+    raster::writeRaster(
         modelHS,
         filename = "HabitatMap_final.tif",
         format = "GTiff",
@@ -98,22 +98,22 @@ plot_Results <- function(inPath, threshold, color = NULL) {
     ##3.b.2##
     stats <- vector("numeric", length = length(files))
     for (i in 1:length(files)) {
-        dummy <- raster(files[i])
+        dummy <- raster::raster(files[i])
         dummy[dummy < thres[i]] <- NA
         dummy[dummy >= thres[i]] <- 1
-        stats[i] <- freq(dummy, value = 1, useNA = "no")
+        stats[i] <- raster::freq(dummy, value = 1, useNA = "no")
     }
 
-    dummy <- Which(!is.na(raster(files[1])))
-    ref <- freq(dummy, value = 1, useNA = "no")
+    dummy <- raster::Which(!is.na(raster::raster(files[1])))
+    ref <- raster::freq(dummy, value = 1, useNA = "no")
     percent <- round((stats / ref) * 100, 2)
     rest <- round(100 - sum(percent), 2)
     percent <- append(percent, rest)
 
     if (.Platform$OS.type == "unix") {
-        x11()
+        grDevices::x11()
     } else {
-        windows()
+        grDevices::windows()
     }
 
     par(oma = c(0, 4, 0, 0))
