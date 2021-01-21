@@ -88,10 +88,10 @@ classNames<-c("deciduous","coniferous","heather_young","heather_old","heather_sh
 
 ##2.a.1##
 multi_Class_Sampling(in.raster=a1,init.samples=50,sample_type="regular",nb_models=200,nb_it=10,buffer=15,reference=ref,model="rf",area=p,mtry=10,last=F,
-seed=3,init.seed="sample", outPath=outPath,step=1,classNames=classNames,n_classes=7,multiTest=1)
+seed=3,init.seed="sample", outPath=outPath,step=1,classNames=classNames,n_classes=7,multiTest=1,RGB=c(19,20,21),overwrite=TRUE)
 
 ##2.b.1##
-multi_Class_Sampling(in.raster=out.raster,init.samples=50,sample_type="regular",nb_models=300,nb_it=10,buffer=15,reference=out.reference,model="rf",area=p,mtry=10,last=F,seed=3,init.seed="sample", outPath=outPath,step=6,classNames=out.names,n_classes=7,multiTest=1)
+multi_Class_Sampling(in.raster=out.raster,init.samples=50,sample_type="regular",nb_models=300,nb_it=10,buffer=15,reference=out.reference,model="rf",area=p,mtry=10,last=F,seed=3,init.seed="sample", outPath=outPath,step=6,classNames=out.names,n_classes=7,multiTest=1,RGB=c(19,20,21),overwrite=TRUE)
 
 ########################################################################################
 ##3)##
