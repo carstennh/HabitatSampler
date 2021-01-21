@@ -46,6 +46,7 @@ remotes::install_git(
     build_manual = TRUE,
     build_vignettes = TRUE
 )
+library(HaSa)
 rasterOptions(tmpdir="./RasterTmp/")
 ########################################################################################
 ##1)##
