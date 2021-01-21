@@ -83,23 +83,23 @@ With the clause `if multiTest > 1` the user will get multiple maps and will be a
 
 
 ### Step 1
-A) An interactive map is plotted in a web browser (e.g. firefox for linux), containing:
+1) An interactive map is plotted in a web browser (e.g. firefox for linux), containing: \
     a) background map \
     b) RGB image \
     c) selected habitat type map \
     d) probaility threshold on mouse hover \
     e) predictive distance
 
-B) The user has to decide to extract this habitat type on the basis of a threshold (B.1) or to sample again (B.2) \
-    B.1) enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type and we move **Step 2**. The files are: \
+2) The user has to decide to extract this habitat type on the basis of a threshold (**2.1**) or to sample again (**2.2**) \
+    2.1) enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type and we move **Step 2..N**. The files are: \
         a) HabitatSampler object (Run) - R Binary \
         b) probability map - *.kml, *.png, geocoded *.tif \
         c) threshold list - R Binary \
         d) leaflet interactive web interface - *.html \
     After habitat extraction is done the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to next step                
     enter sample/model adjsutement (../..) or auto (0) in R console \
-    B.2) enter 0 in R console, the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to new sampling enter
-    sample/model adjustement (../..) or auto (0) in R console. Proceed with A until decision (B.1) has made.
+    2.2) enter 0 in R console, the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to new sampling enter
+    sample/model adjustement (../..) or auto (0) in R console. Proceed with **1** until decision (**2.1**) has made.
     
 ### Step 2...N
 
@@ -119,7 +119,7 @@ Repeat **Step 1** for a new habitat type until **N** habitat types.
 ## Output Plot
 
 3) generate habitat type map and summary statistics \
-    3.a.1) Call function `plot_results` with the following arguments:
+    3.1) Call function `plot_results` with the following arguments:
     
     ```R
         inPath         # input files (*.tif), equals outPath 
