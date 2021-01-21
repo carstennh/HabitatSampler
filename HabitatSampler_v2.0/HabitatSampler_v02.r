@@ -46,7 +46,6 @@ remotes::install_git(
     build_manual = TRUE,
     build_vignettes = TRUE
 )
-HaSa:::usePack("rgdal","raster","maptools","spatialEco","randomForest","e1071","devtools","installr","velox","rgeos","leaflet","htmlwidgets")
 rasterOptions(tmpdir="./RasterTmp/")
 ########################################################################################
 ##1)##
