@@ -7,7 +7,7 @@ The demo shows how to classify 7 classes using a Sentinel 2 image.
 0) Install and load all required packages and functions \
     0.1 set working directories (use: '/') \
     0.2 set data input/output paths (use: '/') \
-    0.3 install dependencies, HaSa R package and automatic load and/or install libraries
+    0.3 install HaSa library and its dependencies
  
 1) Prepare Input Data \
     1.a.1) Satellite time series stack clipped to study area (specify file name) \
@@ -47,6 +47,8 @@ The demo shows how to classify 7 classes using a Sentinel 2 image.
                 classNames      # vector with class names in the order of reference spectra
                 n_classes       # total number of classes (habitat types) to be separated
                 multiTest       # number of test runs to compare different probability output
+                RGB             # pallet colors for the interactive plots
+                overwrite       # overwrite the KML and raster files from previous runs
            )
     ```
     
