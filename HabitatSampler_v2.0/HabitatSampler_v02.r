@@ -35,14 +35,18 @@ dataPath<-"./Data/"
 outPath<-paste(wd,"Data/Results/",sep="")
 
 ##0.3##
-source(paste(inPath,"install_packages.r",sep=""))
-source(paste(inPath,"clip.r",sep=""))
-source(paste(inPath,"outer_procedure.r",sep=""))
-source(paste(inPath,"plot_results.r",sep=""))
-source(paste(inPath,"plot_interactive.r",sep=""))
-source(paste(inPath,"Class_Habitat.r",sep=""))
-
-usePack("rgdal","raster","maptools","spatialEco","randomForest","e1071","devtools","installr","velox","rgeos","leaflet","htmlwidgets")
+install.packages("https://cran.r-project.org/src/contrib/Archive/BH/BH_1.69.0-1.tar.gz", repos=NULL, type="source")
+remotes::install_git(
+    "https://github.com/carstennh/HabitatSampler.git",
+    ref = "master",
+    subdir = "R-package",
+    dependencies = NA,
+    upgrade=FALSE,
+    build = TRUE,
+    build_manual = TRUE,
+    build_vignettes = TRUE
+)
+HaSa:::usePack("rgdal","raster","maptools","spatialEco","randomForest","e1071","devtools","installr","velox","rgeos","leaflet","htmlwidgets")
 rasterOptions(tmpdir="./RasterTmp/")
 ########################################################################################
 ##1)##
