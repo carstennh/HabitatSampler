@@ -83,21 +83,21 @@ With the clause `if multiTest > 1` the user will get multiple maps and will be a
 
 
 ### Step 1
-1) An interactive map is plotted in a web browser (e.g. firefox for linux), containing: \
-    * background map \
-    * RGB image \
-    * selected habitat type map \
-    * probaility threshold on mouse hover \
+1) An interactive map is plotted in a web browser (e.g. firefox for linux), containing:
+    * background map
+    * RGB image
+    * selected habitat type map
+    * probaility threshold on mouse hover
     * predictive distance
 
 2) The user has to decide to extract this habitat type on the basis of a threshold (**2.1**) or to sample again (**2.2**) \
-    2.1) Enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type and we move **Step 2..N**. The files are: \
-        * HabitatSampler object (Run) - R Binary \
-        * probability map - *.kml, *.png, geocoded *.tif \
-        * threshold list - R Binary \
-        * leaflet interactive web interface - *.html \
-        After habitat extraction is done the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to next step                
-        enter sample/model adjsutement (../..) or auto (0) in R console \
+    2.1) Enter threshold in R console, the outcome are 6 files saved to disk for the selected habitat type and we move **Step 2..N**. The files are:
+            * HabitatSampler object (Run) - R Binary
+            * probability map - *.kml, *.png, geocoded *.tif
+            * threshold list - R Binary
+            * leaflet interactive web interface - *.html
+     After habitat extraction is done the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to next step enter sample/model adjsutement (../..) or auto (0) in R console.
+        
     2.2) enter 0 in R console, the user have to decide to adjust starting number of samples and number of models or proceed automaticlay to new sampling enter
     sample/model adjustement (../..) or auto (0) in R console. Proceed with **1** until decision (**2.1**) has made.
     
