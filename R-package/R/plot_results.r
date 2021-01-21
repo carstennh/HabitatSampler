@@ -6,7 +6,7 @@
 #' @param threshold probability threshold provided by the user.
 #' @param color colors for different habitat types, have to be a color vector of length number of habitat types, there is a default colorRamp provided
 #'
-#' @return three plot windows
+#' @return two plot windows and a raster file (GeoTiff)
 #' 1) raster map of habitat type distribution
 #' 2) pie chart of habitat type proportions
 #' 3) a raster map with delineated habitat types -> HabitatMap_final.tif
