@@ -1,5 +1,5 @@
 .. figure:: GitDocs/Logo.png
-    :target: https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0
+    :target: https://github.com/carstennh/HabitatSampler/tree/master/demo
     :align: center
 
 ==================================================================================================
@@ -10,9 +10,9 @@ How to use
 ----------------
 1. Stepwise Procedure
 ----------------------------------
-* You need R to run the master script: **HabitatSampler_v02.r**
-* Within the master script a step by step procedure is executed: **HabitatSampler_Usage.txt** 
-* This is the routine: `HabitatSampler_v2.0 <https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0>`__
+* You need R to run the master script: **HabitatSampler.r**
+* Within the master script a step by step procedure is executed, more info in **HabitatSampler.md**.
+* All necessary information is available under the directory: `demo <https://github.com/carstennh/HabitatSampler/tree/master/demo>`__
 
 2. R package
 --------------------
