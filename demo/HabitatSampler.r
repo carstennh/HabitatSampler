@@ -36,6 +36,9 @@ outPath<-paste(wd,"Data/Results/",sep="")
 
 ##0.3##
 install.packages("https://cran.r-project.org/src/contrib/Archive/BH/BH_1.69.0-1.tar.gz", repos=NULL, type="source")
+install.packages("https://cran.r-project.org/src/contrib/Archive/sf/sf_0.8-1.tar.gz", repos=NULL, type="source")
+install.packages("https://cran.r-project.org/src/contrib/Archive/sp/sp_1.4-1.tar.gz", repos=NULL, type="source")
+install.packages("https://cran.r-project.org/src/contrib/Archive/rgdal/rgdal_1.4-8.tar.gz", repos=NULL, type="source")
 remotes::install_git(
     "https://github.com/carstennh/HabitatSampler.git",
     ref = "master",
@@ -46,7 +49,8 @@ remotes::install_git(
     build_manual = TRUE,
     build_vignettes = TRUE
 )
-library(HaSa)
+libraries <- c("rgdal", "raster", "rgeos", "sp", "sf", "HaSa")
+lapply(libraries, library, character.only = TRUE)
 rasterOptions(tmpdir="./RasterTmp/")
 ########################################################################################
 ##1)##
