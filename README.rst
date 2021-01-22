@@ -65,3 +65,7 @@ HaSa was developed by Carsten Neumann (Helmholtz Centre Potsdam GFZ German Resea
 
 The test data represent pre-processed Copernicus Sentinel-2 satellite imagery (ESA 2018). Pre-processing was done using `GTS2 <https://www.gfz-potsdam.de/en/section/remote-sensing-and-geoinformatics/projects/closed-projects/gts2/>`__ and `AROSICS <https://github.com/GFZ/arosics>`__. 
 
+Community version and commercial support
+----------------------------------------
+
+HaSa will be further developed under a community version located at [GitLab's habitat-sampler group.](https://git.gfz-potsdam.de/habitat-sampler/HabitatSampler). For commercial support the users should contact the Helmholtz innovation lab [FernLab](https://fernlab.gfz-potsdam.de/fern-lab.html) will manage.
