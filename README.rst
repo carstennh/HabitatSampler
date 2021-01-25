@@ -68,4 +68,4 @@ The test data represent pre-processed Copernicus Sentinel-2 satellite imagery (E
 Community version and commercial support
 ----------------------------------------
 
-HaSa will be further developed under a community version located at `GitLab's habitat-sampler group <https://git.gfz-potsdam.de/habitat-sampler/HabitatSampler>`__. For commercial support the users should contact the `Helmholtz innovation lab - FernLab <https://fernlab.gfz-potsdam.de/fern-lab.html>`__.
+HaSa will be further developed under a community version located at `GitLab's habitat-sampler group <https://git.gfz-potsdam.de/habitat-sampler/HabitatSampler>`__.
