@@ -1,6 +1,6 @@
 Package: HaSa
 Title: Autonomous Image Sampling and Probability Mapping
-Version: 1.0
+Version: 1.1.0
 Authors@R: 
     person(given = "Carsten",
            family = "Neumann",
