@@ -1,5 +1,5 @@
 .. figure:: GitDocs/Logo.png
-    :target: https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0
+    :target: https://github.com/carstennh/HabitatSampler/tree/master/demo
     :align: center
 
 ==================================================================================================
@@ -10,9 +10,9 @@ How to use
 ----------------
 1. Stepwise Procedure
 ----------------------------------
-* You need R to run the master script: **HabitatSampler_v02.r**
-* Within the master script a step by step procedure is executed: **HabitatSampler_Usage.txt** 
-* This is the routine: `HabitatSampler_v2.0 <https://github.com/carstennh/HabitatSampler/tree/master/HabitatSampler_v2.0>`__
+* You need R to run the master script: **HabitatSampler.r**
+* Within the master script a step by step procedure is executed, more info in **HabitatSampler.md**.
+* All necessary information is available under the directory: `demo <https://github.com/carstennh/HabitatSampler/tree/master/demo>`__
 
 2. R package
 --------------------
@@ -65,3 +65,7 @@ HaSa was developed by Carsten Neumann (Helmholtz Centre Potsdam GFZ German Resea
 
 The test data represent pre-processed Copernicus Sentinel-2 satellite imagery (ESA 2018). Pre-processing was done using `GTS2 <https://www.gfz-potsdam.de/en/section/remote-sensing-and-geoinformatics/projects/closed-projects/gts2/>`__ and `AROSICS <https://github.com/GFZ/arosics>`__. 
 
+Community version and commercial support
+----------------------------------------
+
+HaSa will be further developed under a community version located at `GitLab's habitat-sampler group <https://git.gfz-potsdam.de/habitat-sampler/HabitatSampler>`__.
