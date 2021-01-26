@@ -26,7 +26,7 @@
 #####
 
 ##0.1##
-wd<-"./HabitatSampler_v2.0/"
+wd<-"./demo/"
 setwd(wd)
 
 ##0.2##
